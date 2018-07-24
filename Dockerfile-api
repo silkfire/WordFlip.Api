@@ -1,0 +1,37 @@
+FROM microsoft/dotnet:2.1.302-sdk as builder  
+
+# Create root directory
+RUN mkdir -p /root/src/app
+WORKDIR /root/src/app
+
+# Create directories for all project files
+RUN mkdir -p ./WordFlip.Data ./WordFlip.Services ./WordFlip.WebApi
+
+# Copy the the project files
+COPY ./src/WordFlip.Data/WordFlip.Data.csproj ./WordFlip.Data
+COPY ./src/WordFlip.Services/WordFlip.Services.csproj ./WordFlip.Services
+COPY ./src/WordFlip.WebApi/WordFlip.WebApi.csproj ./WordFlip.WebApi
+
+# Restore the dependencies of the project
+RUN dotnet restore ./WordFlip.WebApi/WordFlip.WebApi.csproj
+
+# Copy the rest of the source files
+COPY ./src .
+
+# Rename the Docker-specific API settings file to its default name
+RUN mv ./WordFlip.WebApi/appsettings.Docker.json ./WordFlip.WebApi/appsettings.json
+
+# Build and deploy the application 
+RUN dotnet publish ./WordFlip.WebApi/WordFlip.WebApi.csproj -c release -o ../publish
+
+
+
+FROM microsoft/dotnet:2.1.2-aspnetcore-runtime
+
+WORKDIR /root
+COPY --from=builder /root/src/app/publish .
+ENV ASPNETCORE_URLS=http://+:8080
+EXPOSE 8080/tcp
+
+# Start the web API service
+CMD ["dotnet", "./WordFlip.WebApi.dll"]  

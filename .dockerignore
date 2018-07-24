@@ -1,0 +1,12 @@
+**/obj/
+**/bin/
+**/_ReSharper.*/
+**/packages/
+**/PublishProfiles/
+**/*.user
+**/*.suo
+**/*.cache
+**/.vs/
+**/project.lock.json
+
+**/appsettings.json

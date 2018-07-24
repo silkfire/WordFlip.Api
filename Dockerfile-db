@@ -1,0 +1,28 @@
+FROM microsoft/mssql-server-linux:2017-CU9
+
+ENV ACCEPT_EULA=Y
+
+
+# In production, make sure to change to a secure password after running the container!
+# /opt/mssql-tools/bin/sqlcmd -U SA -P 'OLD_PASSWORD' -Q 'ALTER LOGIN SA WITH PASSWORD="NEW_PASSWORD"'
+ENV SA_PASSWORD=January2018
+
+# In production, make sure to use a server that requires a license:
+# * Standard
+# * Enterprise
+
+#ENV MSSQL_PID=Developer
+ENV MSSQL_PID=Express
+
+WORKDIR /src
+
+# Copy the database setup scripts
+COPY setup-database.sql ./
+COPY boot-database.sh ./
+COPY setup-database.sh ./
+
+# Grant permissions for the setup scripts to be executable
+RUN chmod +x ./boot-database.sh
+RUN chmod +x ./setup-database.sh
+
+CMD bash ./boot-database.sh
