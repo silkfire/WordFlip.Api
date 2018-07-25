@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <RootNamespace>Wordsmith.WordFlip.Api</RootNamespace>
+    <RootNamespace>Wordsmith.WordFlip.WebApi</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

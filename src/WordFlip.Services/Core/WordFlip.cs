@@ -1,10 +1,10 @@
-﻿namespace Wordsmith.WordFlip.Services
+﻿namespace Wordsmith.WordFlip.Services.Core
 {
     using System.Linq;
     using System.Text.RegularExpressions;
 
 
-    public class WordFlippingService
+    public static class WordFlip
     {
         /// <summary>
         /// Reverses each individual word of a sentence, preserving original word order as well as a predefined set of any prepended or appended punctuation marks.

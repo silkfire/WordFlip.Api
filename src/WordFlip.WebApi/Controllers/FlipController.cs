@@ -1,9 +1,8 @@
-﻿namespace Wordsmith.WordFlip.Api.Controllers
+﻿namespace Wordsmith.WordFlip.WebApi.Controllers
 {
     using Models;
 
-    using Services;
-    using Services.Data;
+    using Services.Core;
     using Services.Data.Models;
 
     using Microsoft.AspNetCore.Mvc;
@@ -17,11 +16,12 @@
     [ApiController]
     public class FlipController : ControllerBase
     {
-        private readonly WordFlipDataService _dataService;
+        private readonly WordFlippingService _flippingService;
 
-        public FlipController(WordFlipDataService dataService)
+
+        public FlipController(WordFlippingService flippingService)
         {
-            _dataService = dataService;
+            _flippingService = flippingService;
         }
 
 
@@ -42,22 +42,14 @@
 
             if (payload != null)
             {
-                flippedSentence = WordFlippingService.Flip(payload.SourceSentence);
+                flippedSentence = await _flippingService.Flip(payload.OriginalSentence);
             }
 
 
             if (flippedSentence == null)
             {
-                return RepondWithError(HttpStatusCode.BadRequest, "'sourceSentence' cannot be null or empty.");
+                return RepondWithError(HttpStatusCode.BadRequest, "'originalSentence' cannot be null or empty.");
             }
-
-
-
-            //////////////
-            // Save the flipped sentence to DB
-            ///////
-
-            await _dataService.NewFlippedSentence(flippedSentence);
 
 
             return new ObjectResult(new { resultSentence = flippedSentence });
@@ -68,7 +60,7 @@
         [HttpGet("getLastSentences")]
         public async Task<ActionResult<IEnumerable<FlippedSentenceDto>>> GetLastSentences()
         {
-            return await _dataService.GetLastSentences();
+            return await _flippingService.GetLastSentences();
         }
 
 

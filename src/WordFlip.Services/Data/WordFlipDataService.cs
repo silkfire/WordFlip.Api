@@ -2,8 +2,8 @@
 {
     using Models;
 
-    using WordFlip.Data.Entities;
-    using WordFlip.Data.Repositories;
+    using global::Wordsmith.WordFlip.Data.Entities;
+    using global::Wordsmith.WordFlip.Data.Repositories;
 
     using System.Collections.Generic;
     using System.Linq;

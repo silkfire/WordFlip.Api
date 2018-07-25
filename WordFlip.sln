@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WordFlip.Data", "src\WordFl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WordFlip.Services", "src\WordFlip.Services\WordFlip.Services.csproj", "{793FF3DB-D52C-4A06-837D-0F9E7B1DAB58}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WordFlip.WebApi.Tests", "tests\WordFlip.WebApi.Tests\WordFlip.WebApi.Tests.csproj", "{6C8F273A-30C8-4374-A50D-276856FE052D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WordFlip.Tests", "tests\WordFlip.Tests\WordFlip.Tests.csproj", "{6C8F273A-30C8-4374-A50D-276856FE052D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

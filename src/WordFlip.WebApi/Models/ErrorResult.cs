@@ -1,4 +1,4 @@
-﻿namespace Wordsmith.WordFlip.Api.Models
+﻿namespace Wordsmith.WordFlip.WebApi.Models
 {
     public class ErrorResult
     {
