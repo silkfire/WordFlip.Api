@@ -71,7 +71,7 @@ If any exception occurs or you try to access a non-existing method, you will get
 ## How to install
 
 WordFlip works excellently if deployed to a set of Docker containers, one for the .NET backend and one for the database.
-Regardless, you can still build it locally and adjust the connection string to the database that you choose by altering the `appsettings.json` configuration file.
+Regardless, you can still build it locally and adjust the connection string accordingly by altering the `appsettings.json` configuration file.
 
 ### Clone the repository
 
