@@ -31,7 +31,7 @@ The payload must follow the specified JSON format and the input sentence cannot 
 }
 ```
 
-If the JSON is malformed or the `resultSentence` property is `null` or empty, you will receive the following response:
+If the `originalSentence` property of the payload is missing, `null` or empty, you will receive the following response:
 
 ```
 {
