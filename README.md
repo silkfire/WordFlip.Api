@@ -4,12 +4,12 @@ The WordFlip API has come to be one of Wordsmith's most popular services. We dec
 ## Features
 
 * Reverses the individual words of any sentence, but preserves their original order.
-* Retains the position of some initial and ending punctuation marks that may surround the individual words.
+* Retains the position of some leading and trailing punctuation marks that may surround the individual words.
 * Persists the flipped sentences to any SQL Server database.
 
 ## How to use
 
-The API comes with two methods, one to perform a word flip and persist the sentence to the database, and one to retrieve the last added sentences (the number of sentences fetched defaults to 5).
+The API comes with two methods, one to perform a word flip and persist the sentence to a database, and one to retrieve the last added sentences (the number of sentences fetched defaults to 5).
 
 ### Flip the words of a sentence
 
@@ -45,7 +45,7 @@ If the `originalSentence` property of the payload is missing, `null` or empty, y
 #### `GET /api/flip/getLastSentences`
 
 This method will fetch the last set of sentences added to the database ordered by their time of insertion in descending order.
-The method returns an array of flipped sentence objects and follows this JSON format:
+The method returns an array of flipped sentence objects and follows the below JSON format:
 
 ```
 [

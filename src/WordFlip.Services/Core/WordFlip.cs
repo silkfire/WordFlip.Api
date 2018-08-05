@@ -6,8 +6,14 @@
 
     public static class WordFlip
     {
+        // [LEADING PUNCTUATION MARKS "']   [ANY CHARACTERS] (<--- only reverse this part)   [TRAILING PUNCTUATION MARKS .,:;!?…""']
+
+        private static readonly Regex FlipRegex = new Regex(@"^([""']+)?(.+?)([.,:;!?…""']+)?$");
+
+
+
         /// <summary>
-        /// Reverses each individual word of a sentence, preserving original word order as well as a predefined set of any prepended or appended punctuation marks.
+        /// Reverses each individual word of a sentence, preserving original word order as well as a predefined set of leading and trailing punctuation marks.
         /// </summary>
         /// <param name="sentence">A sentence whose individual words to reverse.</param>
         public static string Flip(string sentence)
@@ -23,11 +29,7 @@
             var sanitizedSentence = Regex.Replace(sentence.Trim(), @"\s+", " ");
 
 
-            // [STARTING PUNCTUATION MARKS "']   [ANY CHARACTERS] (<--- only reverse this part)   [ENDING PUNCTUATION MARKS .,:;!?""']
-
-            var flipRegex = new Regex(@"^([""']+)?(.+?)([.,:;!?""']+)?$");
-
-            return string.Join(' ', sanitizedSentence.Split(' ').Select(w => flipRegex.Replace(w, m => $"{m.Groups[1].Value}{new string(m.Groups[2].Value.Reverse().ToArray())}{m.Groups[3].Value}")));
+            return string.Join(' ', sanitizedSentence.Split(' ').Select(w => FlipRegex.Replace(w, m => $"{m.Groups[1].Value}{new string(m.Groups[2].Value.Reverse().ToArray())}{m.Groups[3].Value}")));
         }
     }
 }

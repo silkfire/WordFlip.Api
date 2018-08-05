@@ -18,7 +18,7 @@
         }
 
         /// <summary>
-        /// Reverses each individual word of a sentence, preserving original word order as well as a predefined set of any prepended or appended punctuation marks and persists the resulting sentences.
+        /// Reverses each individual word of a sentence, preserving original word order as well as a predefined set of leading and trailing punctuation marks and persists the resulting sentences.
         /// </summary>
         /// <param name="sentence">A sentence whose individual words to reverse.</param>
         public async Task<string> Flip(string sentence)

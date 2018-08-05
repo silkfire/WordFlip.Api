@@ -22,6 +22,9 @@ namespace Wordsmith.WordFlip.Tests
 
         [InlineData(@"The Hatter opened his eyes very wide on hearing this; but all he said was ""Why is a raven like a writing desk?""",
                     @"ehT rettaH denepo sih seye yrev ediw no gniraeh siht; tub lla eh dias saw ""yhW si a nevar ekil a gnitirw ksed?""")]
+
+        [InlineData("He was without hope... desolate, empty… the epitome of a broken heart.",
+                    "eH saw tuohtiw epoh... etalosed, ytpme… eht emotipe fo a nekorb traeh.")]
         public void Flipped_Sentence_Must_Equal_Expected_Flipped_Sentence(string originalSentence, string expectedFlippedSentence)
         {
             /////////////
