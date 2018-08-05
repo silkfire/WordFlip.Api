@@ -13,7 +13,7 @@ The API comes with two methods, one to perform a word flip and persist the sente
 
 ### Flip the words of a sentence
 
-`POST /api/flip`
+#### `POST /api/flip`
 
 This method expects a JSON object in the following form:
 
@@ -42,7 +42,7 @@ If the `originalSentence` property of the payload is missing, `null` or empty, y
 
 ### Retrieve the last added sentences
 
-`GET /api/flip/getLastSentences`
+#### `GET /api/flip/getLastSentences`
 
 This method will fetch the last set of sentences added to the database ordered by their time of insertion in descending order.
 The method returns an array of flipped sentence objects and follows this JSON format:
