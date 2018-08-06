@@ -102,6 +102,12 @@ To stop the service, run the following command:
 $ docker-compose stop
 ```
 
+To restart the service, run the following command:
+
+```
+$ docker-compose start
+```
+
 To delete the containers (in case you're rebuilding the project or just would like to reset the service), run the following command:
 
 ```
