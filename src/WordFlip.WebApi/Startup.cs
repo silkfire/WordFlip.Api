@@ -58,6 +58,12 @@
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            // Enable CORS to allow requests from client
+            // TODO: Add stricter CORS policy
+            app.UseCors(b => b.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
