@@ -50,7 +50,7 @@
 
                                                                   FROM flipped_sentences AS FS
 
-                                                                  ORDER BY FS.created DESC").ConfigureAwait(false);
+                                                                  ORDER BY FS.created DESC, FS.id DESC").ConfigureAwait(false);
         }
 
         /// <summary>

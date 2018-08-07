@@ -13,7 +13,7 @@ GO
 CREATE TABLE [dbo].[flipped_sentences](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[sentence] [text] NOT NULL,
-	[created] [smalldatetime] NOT NULL,
+	[created] [datetime2] NOT NULL,
  CONSTRAINT [PK_flipped_sentences] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
