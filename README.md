@@ -78,6 +78,7 @@ Regardless, you can still build it locally and adjust the connection string acco
 Clone the project into an empty directory:
 
 ```
+$ cd WordFlip.Api
 $ git clone https://github.com/silkfire/WordFlip.Api.git
 ```
 
