@@ -1,6 +1,7 @@
 ﻿namespace Wordsmith.WordFlip.WebApi
 {
     using Data.Repositories;
+    using Models;
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -31,6 +32,12 @@
             services.AddMvc()
                     .AddControllersAsServices()
                     .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);         // Enables the new [ApiController] attribute
+
+
+            // Set up a configuration object for the API
+
+            services.Configure<ApiSettings>(Configuration.GetSection("ApiSettings"));
+
 
             return ConfigureIoC(services);
         }

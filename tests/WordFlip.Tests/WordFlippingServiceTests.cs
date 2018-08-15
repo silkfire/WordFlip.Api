@@ -1,6 +1,5 @@
 ﻿namespace Wordsmith.WordFlip.Tests
 {
-    using System;
     using Data.Entities;
     using Data.Repositories;
     using Services.Core;
@@ -9,6 +8,7 @@
     using FakeItEasy;
     using Xunit;
 
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -25,7 +25,7 @@
         /// <summary>
         /// The maximum number of sentences to retrieve when calling <see cref="IWordFlipRepository{TFlippedSentence}.GetLastSentences"/>.
         /// </summary>
-        private const int DefaultGetLastSentenceCount = 5;
+        private const int ItemsPerPage = 5;
 
 
         public WordFlippingServiceTests()
@@ -37,9 +37,9 @@
             // A call to IWordFlipRepository.GetLastSentences() should always return the last five sentences from _flippedSentences.
             /////
 
-            A.CallTo(       () => _wordFlipRepository.GetLastSentences(DefaultGetLastSentenceCount))
+            A.CallTo(       () => _wordFlipRepository.GetLastSentences(ItemsPerPage, 1))
              .ReturnsLazily(() => Task.FromResult(_flippedSentences.OrderByDescending(fs => fs.created)
-                                                                   .Take(DefaultGetLastSentenceCount)));
+                                                                   .Take(ItemsPerPage)));
 
 
             _wordFlippingService = new WordFlippingService(new WordFlipDataService(_wordFlipRepository));
@@ -61,7 +61,7 @@
             // ACT
             /////
 
-            var lastFlippedSentences = await _wordFlippingService.GetLastSentences();
+            var lastFlippedSentences = await _wordFlippingService.GetLastSentences(ItemsPerPage).ConfigureAwait(false);
 
 
             /////////////
@@ -86,8 +86,8 @@
             // ACT
             /////
 
-            var nullFlip  = await _wordFlippingService.Flip(null);
-            var emptyFlip = await _wordFlippingService.Flip("");
+            var nullFlip  = await _wordFlippingService.Flip(null).ConfigureAwait(false);
+            var emptyFlip = await _wordFlippingService.Flip("").ConfigureAwait(false);
 
 
             /////////////
@@ -112,6 +112,9 @@
             const string flippedSentence  = "yM sdrow era ydaer ot eb deppilf! {0}";
 
 
+
+            // Tuple<index, originalSentence[index], flippedSentence[index]>
+
             var sentences = Enumerable.Range(1, 6).Select(i => Tuple.Create(i, string.Format(originalSentence, i), string.Format(flippedSentence, i)))
                                                   .ToList();
 
@@ -134,7 +137,7 @@
 
             foreach (var sentence in sentences)
             {
-                await _wordFlippingService.Flip(sentence.Item2);
+                await _wordFlippingService.Flip(sentence.Item2).ConfigureAwait(false);
             }
 
 
@@ -146,7 +149,7 @@
             // The sentences should be flipped and persisted.
 
 
-            var lastFlippedSentences = await _wordFlippingService.GetLastSentences();
+            var lastFlippedSentences = await _wordFlippingService.GetLastSentences(ItemsPerPage).ConfigureAwait(false);
 
             Assert.Equal(sentences[1].Item3, lastFlippedSentences[4].Sentence);
             Assert.Equal(sentences[2].Item3, lastFlippedSentences[3].Sentence);

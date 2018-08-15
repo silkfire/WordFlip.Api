@@ -43,12 +43,13 @@
 
 
         /// <summary>
-        /// Asynchronously fetches the latest flipped sentences from the database, sorted in descending order by its time of creation.
-        /// <para>The number of sentences fetched is set to 5.</para>
+        /// Asynchronously fetches the last flipped sentences from the database, sorted in descending order by its time of creation.
         /// </summary>
-        public async Task<List<FlippedSentenceDto>> GetLastSentences()
+        /// <param name="itemsPerPage">The number of items to return per page.</param>
+        /// <param name="page">The page of results to return.</param>
+        public async Task<List<FlippedSentenceDto>> GetLastSentences(int itemsPerPage, int page = 1)
         {
-            return await _dataService.GetLastSentences();
+            return await _dataService.GetLastSentences(itemsPerPage, page);
         }
     }
 }

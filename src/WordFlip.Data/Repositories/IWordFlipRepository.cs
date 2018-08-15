@@ -11,10 +11,11 @@
     public interface IWordFlipRepository<TFlippedSentence>
     {
         /// <summary>
-        /// Asynchronously fetches the latest flipped sentences from the associated data store, sorted in descending order by its time of creation.
+        /// Asynchronously fetches the last flipped sentences from the database, sorted in descending order by its time of creation.
         /// </summary>
-        /// <param name="limit">An optional limit specifying the maximum number of sentences to fetch.</param>
-        Task<IEnumerable<TFlippedSentence>> GetLastSentences(byte limit = 5);
+        /// <param name="itemsPerPage">The number of items to return per page.</param>
+        /// <param name="page">The page of results to return.</param>
+        Task<IEnumerable<TFlippedSentence>> GetLastSentences(int itemsPerPage, int page = 1);
 
         /// <summary>
         /// Asynchronously saves the specified flipped sentence record to the associated data store.

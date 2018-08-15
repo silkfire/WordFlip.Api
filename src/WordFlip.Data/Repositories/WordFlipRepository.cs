@@ -41,16 +41,30 @@
 
 
         /// <summary>
-        /// Asynchronously fetches the latest flipped sentences from the database, sorted in descending order by its time of creation.
+        /// Asynchronously fetches the last flipped sentences from the database, sorted in descending order by its time of creation.
         /// </summary>
-        /// <param name="limit">An optional limit specifying the maximum number of sentences to fetch.</param>
-        public async Task<IEnumerable<FlippedSentence>> GetLastSentences(byte limit = 5)
+        /// <param name="itemsPerPage">The number of items to return per page.</param>
+        /// <param name="page">The page of results to return.</param>
+        public async Task<IEnumerable<FlippedSentence>> GetLastSentences(int itemsPerPage, int page = 1)
         {
-            return await Connection.QueryAsync<FlippedSentence>(@"SELECT FS.id, FS.sentence, FS.created
+            return await Connection.QueryAsync<FlippedSentence>(@"SELECT  *
 
-                                                                  FROM flipped_sentences AS FS
+                                                                  FROM    ( SELECT ROW_NUMBER() OVER ( ORDER BY FS.created DESC, FS.id DESC ) AS RowNumber,
+                                                                                   FS.id, FS.sentence, FS.created
 
-                                                                  ORDER BY FS.created DESC, FS.id DESC").ConfigureAwait(false);
+                                                                            FROM   flipped_sentences AS FS
+                                                                          ) AS RowConstrainedResult
+                                                                  WHERE RowNumber >= @min
+                                                                    AND RowNumber < @max
+
+                                                                  ORDER BY RowNumber",
+                
+
+                                                                  new
+                                                                  {
+                                                                      min = (page - 1) * itemsPerPage   + 1,
+                                                                      max =  page      * itemsPerPage   + 1
+                                                                  });
         }
 
         /// <summary>
@@ -66,7 +80,7 @@
                                             VALUES(@sentence)",
                 
                 
-                                            new { entity.sentence }).ConfigureAwait(false);
+                                            new { entity.sentence });
         }
     }
 }
