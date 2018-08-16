@@ -84,6 +84,7 @@ $ git clone https://github.com/silkfire/WordFlip.Api.git
 Run Docker Compose to build the necessary images:
 
 ```
+$ cd WordFlip.Api
 $ docker-compose build
 ```
 
