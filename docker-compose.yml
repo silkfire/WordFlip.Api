@@ -4,7 +4,7 @@ services:
         build:
           context: .
           dockerfile: Dockerfile-api
-        image: word-flip-api:1.0
+        image: silkfire/word-flip-api:1.0
         container_name: api
         ports:
             - "8080:8080"
@@ -14,5 +14,5 @@ services:
         build:
           context: .
           dockerfile: Dockerfile-db
-        image: word-flip-api-db:1.0
+        image: silkfire/word-flip-api-db:1.0
         container_name: db
