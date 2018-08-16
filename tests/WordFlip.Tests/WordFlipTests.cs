@@ -25,6 +25,9 @@ namespace Wordsmith.WordFlip.Tests
 
         [InlineData("He was without hope... desolate, empty… the epitome of a broken heart.",
                     "eH saw tuohtiw epoh... etalosed, ytpme… eht emotipe fo a nekorb traeh.")]
+
+        [InlineData("Word1? word2: word3; 'word4'",
+                    "1droW? 2drow: 3drow; '4drow'")]
         public void Flipped_Sentence_Must_Equal_Expected_Flipped_Sentence(string originalSentence, string expectedFlippedSentence)
         {
             /////////////
