@@ -67,20 +67,25 @@
                                                                   });
         }
 
+
+
+        // Insert and select in one operation, solution taken from: https://stackoverflow.com/a/47110425/633098
         /// <summary>
-        /// Asynchronously saves the specified flipped sentence record to the database.
+        /// Asynchronously inserts the specified flipped sentence to the database and returns the just saved record.
         /// </summary>
-        /// <param name="entity">An entity representing a flipped sentence record.</param>
-        public async Task NewFlippedSentence(FlippedSentence entity)
+        /// <param name="sentence">The flipped sentence to persist.</param>
+        public async Task<FlippedSentence> NewFlippedSentence(string sentence)
         {
-            await Connection.ExecuteAsync(@"INSERT INTO flipped_sentences
+            return await Connection.QuerySingleAsync<FlippedSentence>(@"INSERT INTO flipped_sentences
 
-                                           (sentence)
+                                                                       (sentence)
 
-                                            VALUES(@sentence)",
+                                                                        OUTPUT INSERTED.*
+
+                                                                        VALUES(@sentence)",
                 
                 
-                                            new { entity.sentence });
+                                                                        new { sentence });
         }
     }
 }

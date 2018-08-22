@@ -18,9 +18,9 @@
         Task<IEnumerable<TFlippedSentence>> GetLastSentences(int itemsPerPage, int page = 1);
 
         /// <summary>
-        /// Asynchronously saves the specified flipped sentence record to the associated data store.
+        /// Asynchronously inserts the specified flipped sentence to the associated data store and returns the just saved record.
         /// </summary>
-        /// <param name="entity">An entity representing a flipped sentence record.</param>
-        Task NewFlippedSentence(TFlippedSentence entity);
+        /// <param name="sentence">The flipped sentence to persist.</param>
+        Task<TFlippedSentence> NewFlippedSentence(string sentence);
     }
 }

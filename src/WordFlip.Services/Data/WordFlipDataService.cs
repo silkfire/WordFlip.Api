@@ -22,6 +22,19 @@
 
 
 
+
+        private static FlippedSentenceDto MapToDto(FlippedSentence entity)
+        {
+            return new FlippedSentenceDto
+            {
+                Id       = entity.id,
+                Sentence = entity.sentence,
+                Created  = entity.created
+            };
+        }
+
+
+
         /// <summary>
         /// Asynchronously fetches the last flipped sentences from the database, sorted in descending order by its time of creation.
         /// </summary>
@@ -29,22 +42,17 @@
         /// <param name="page">The page of results to return.</param>
         public async Task<List<FlippedSentenceDto>> GetLastSentences(int itemsPerPage, int page = 1)
         {
-            return (await _wordFlipRepository.GetLastSentences(itemsPerPage, page)).Select(fs => new FlippedSentenceDto
-                                                                                                 {
-                                                                                                     Id       = fs.id,
-                                                                                                     Sentence = fs.sentence,
-                                                                                                     Created  = fs.created
-                                                                                                 })
+            return (await _wordFlipRepository.GetLastSentences(itemsPerPage, page)).Select(MapToDto)
                                                                                    .ToList();
         }
 
         /// <summary>
-        /// Asynchronously saves the specified flipped sentence to the database.
+        /// Asynchronously inserts the specified flipped sentence to the database and returns the just saved record.
         /// </summary>
-        /// <param name="sentence">A flipped sentence.</param>
-        public async Task NewFlippedSentence(string sentence)
+        /// <param name="sentence">The flipped sentence to store.</param>
+        public async Task<FlippedSentenceDto> NewFlippedSentence(string sentence)
         {
-            await _wordFlipRepository.NewFlippedSentence(new FlippedSentence { sentence = sentence });
+            return MapToDto(await _wordFlipRepository.NewFlippedSentence(sentence));
         }
     }
 }

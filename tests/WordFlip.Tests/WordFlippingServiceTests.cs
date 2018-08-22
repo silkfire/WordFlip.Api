@@ -97,36 +97,34 @@
             Assert.Null(nullFlip);
             Assert.Null(emptyFlip);
 
-            A.CallTo(() => _wordFlipRepository.NewFlippedSentence(A<FlippedSentence>._)).MustNotHaveHappened();
+            A.CallTo(() => _wordFlipRepository.NewFlippedSentence(A<string>._)).MustNotHaveHappened();
         }
 
 
         [Fact]
-        public async Task Flipping_Sentences_Should_Persist_Them()
+        public async Task Flipping_A_Sentence_Should_Persist_It()
         {
             /////////////
             // ARRANGE
             /////
 
-            const string originalSentence = "My words are ready to be flipped! {0}";
-            const string flippedSentence  = "yM sdrow era ydaer ot eb deppilf! {0}";
+            const string originalSentence = "My words are ready to be flipped!";
+            const string flippedSentence  = "yM sdrow era ydaer ot eb deppilf!";
 
 
-
-            // Tuple<index, originalSentence[index], flippedSentence[index]>
-
-            var sentences = Enumerable.Range(1, 6).Select(i => Tuple.Create(i, string.Format(originalSentence, i), string.Format(flippedSentence, i)))
-                                                  .ToList();
-
-
-            A.CallTo(() => _wordFlipRepository.NewFlippedSentence(A<FlippedSentence>._))
-             .ReturnsLazily((FlippedSentence fs) =>
+            A.CallTo(() => _wordFlipRepository.NewFlippedSentence(A<string>._))
+             .ReturnsLazily((string fs) =>
              {
-                 fs.created = DateTime.Now;;
+                 var flippedSentenceRecord = new FlippedSentence
+                 {
+                     id       = 1,
+                     sentence = flippedSentence,
+                     created  = DateTime.Now
+                 };
 
-                 _flippedSentences.Add(fs);
+                 _flippedSentences.Add(flippedSentenceRecord);
              
-                 return Task.CompletedTask;
+                 return Task.FromResult(flippedSentenceRecord);
              });
 
 
@@ -135,10 +133,7 @@
             /////
 
 
-            foreach (var sentence in sentences)
-            {
-                await _wordFlippingService.Flip(sentence.Item2).ConfigureAwait(false);
-            }
+            await _wordFlippingService.Flip(originalSentence).ConfigureAwait(false);
 
 
 
@@ -146,16 +141,18 @@
             // ASSERT
             /////
 
-            // The sentences should be flipped and persisted.
-
-
             var lastFlippedSentences = await _wordFlippingService.GetLastSentences(ItemsPerPage).ConfigureAwait(false);
 
-            Assert.Equal(sentences[1].Item3, lastFlippedSentences[4].Sentence);
-            Assert.Equal(sentences[2].Item3, lastFlippedSentences[3].Sentence);
-            Assert.Equal(sentences[3].Item3, lastFlippedSentences[2].Sentence);
-            Assert.Equal(sentences[4].Item3, lastFlippedSentences[1].Sentence);
-            Assert.Equal(sentences[5].Item3, lastFlippedSentences[0].Sentence);
+
+            // Only one record should have been added
+
+            Assert.Single(lastFlippedSentences);
+
+
+
+            // The sentence must have been correctly reversed
+
+            Assert.Equal(flippedSentence, lastFlippedSentences[0].Sentence);
         }
     }
 }

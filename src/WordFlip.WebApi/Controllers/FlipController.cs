@@ -30,7 +30,7 @@
 
 
 
-        private IActionResult RepondWithError(HttpStatusCode statusCode, string message)
+        private IActionResult RespondWithError(HttpStatusCode statusCode, string message)
         {
             return StatusCode((int)statusCode, new ErrorResult { Error = message });
         }
@@ -41,22 +41,22 @@
         [HttpPost]
         public async Task<IActionResult> Flip(FlipPayload payload)
         {
-            string flippedSentence = null;
+            FlippedSentenceDto flippedSentenceRecord = null;
 
 
             if (payload != null)
             {
-                flippedSentence = await _flippingService.Flip(payload.OriginalSentence);
+                flippedSentenceRecord = await _flippingService.Flip(payload.OriginalSentence);
             }
 
 
-            if (flippedSentence == null)
+            if (flippedSentenceRecord == null)
             {
-                return RepondWithError(HttpStatusCode.BadRequest, "'originalSentence' cannot be null or empty.");
+                return RespondWithError(HttpStatusCode.BadRequest, "'originalSentence' cannot be null or empty.");
             }
 
 
-            return new ObjectResult(new { resultSentence = flippedSentence });
+            return new ObjectResult(flippedSentenceRecord);
         }
 
 
@@ -76,7 +76,7 @@
         [Route("/error/{code}")]
         public IActionResult Error(int code)
         {
-            return RepondWithError(HttpStatusCode.BadRequest, "An unexpected error occurred." );
+            return RespondWithError(HttpStatusCode.BadRequest, "An unexpected error occurred." );
         }
     }
 }

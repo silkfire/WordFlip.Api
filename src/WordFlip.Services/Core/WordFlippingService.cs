@@ -19,9 +19,10 @@
 
         /// <summary>
         /// Reverses each individual word of a sentence, preserving original word order as well as a predefined set of leading and trailing punctuation marks and persists the resulting sentences.
+        /// <para>The method returns the just inserted flipped sentence record.</para>
         /// </summary>
         /// <param name="sentence">A sentence whose individual words to reverse.</param>
-        public async Task<string> Flip(string sentence)
+        public async Task<FlippedSentenceDto> Flip(string sentence)
         {
             var flippedSentence = WordFlip.Flip(sentence);
 
@@ -35,10 +36,7 @@
             // Save the flipped sentence to DB
             ///////
 
-            await _dataService.NewFlippedSentence(flippedSentence);
-
-
-            return flippedSentence;
+            return await _dataService.NewFlippedSentence(flippedSentence);
         }
 
 
