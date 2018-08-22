@@ -23,11 +23,13 @@ This method expects a JSON object in the following form:
 }
 ```
 
-The payload must follow the specified JSON format and the input sentence cannot be `null` or empty. If everything goes well, you should receive the following response:
+The payload must follow the specified JSON format and the input sentence cannot be `null` or empty. If everything goes well, you should receive a response containing the persisted FlippedSentence record:
 
 ```
 {
-   resultSentence: "deppilf eb ot ydaer ecnetnes a ma I."
+   created: "\/Date(1534923486576)\/",
+   id: 1
+   sentence: "deppilf eb ot ydaer ecnetnes a ma I."
 }
 ```
 
