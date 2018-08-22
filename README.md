@@ -27,9 +27,9 @@ The payload must follow the specified JSON format and the input sentence cannot 
 
 ```
 {
-   created: "\/Date(1534923486576)\/",
-   id: 1
-   sentence: "deppilf eb ot ydaer ecnetnes a ma I."
+   id: 1,
+   sentence: "deppilf eb ot ydaer ecnetnes a ma I.",
+   created: "2018-08-22T07:51:47.5066667"
 }
 ```
 
