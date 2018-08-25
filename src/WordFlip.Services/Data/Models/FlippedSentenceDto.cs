@@ -19,7 +19,7 @@
         /// <summary>
         /// Timestamp of when the flipped sentence was saved.
         /// </summary>
-        public DateTime Created { get; set; }
+        public DateTimeOffset Created { get; set; }
 
 
         public override string ToString() => Sentence;

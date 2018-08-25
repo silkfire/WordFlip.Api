@@ -19,6 +19,6 @@
         /// <summary>
         /// Timestamp of when the flipped sentence was saved.
         /// </summary>
-        public DateTime created { get; set; }
+        public DateTimeOffset created { get; set; }
     }
 }
