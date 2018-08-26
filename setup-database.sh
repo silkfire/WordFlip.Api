@@ -1,5 +1,5 @@
 # Make sure the server has started before running the setup step
-sleep 15s
+sleep 25s
 
 echo 'Setting up database...'
 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P January2018 -d master -i ./setup-database.sql
