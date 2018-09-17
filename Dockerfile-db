@@ -1,4 +1,4 @@
-FROM microsoft/mssql-server-linux:2017-CU9
+FROM microsoft/mssql-server-linux:2017-CU10
 
 ENV ACCEPT_EULA=Y
 

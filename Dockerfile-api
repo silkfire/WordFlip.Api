@@ -1,8 +1,7 @@
-FROM microsoft/dotnet:2.1.302-sdk AS builder
+FROM microsoft/dotnet:2.1.402-sdk AS builder
 
-# Create root directory
-RUN mkdir -p /root/src/app
-WORKDIR /root/src/app
+# Set the working directory
+WORKDIR /root
 
 # Create directories for all project files
 RUN mkdir -p ./WordFlip.Data ./WordFlip.Services ./WordFlip.WebApi
@@ -26,10 +25,10 @@ RUN dotnet publish ./WordFlip.WebApi/WordFlip.WebApi.csproj -c release -o ../pub
 
 
 
-FROM microsoft/dotnet:2.1.2-aspnetcore-runtime
+FROM microsoft/dotnet:2.1.4-aspnetcore-runtime
 
 WORKDIR /root
-COPY --from=builder /root/src/app/publish .
+COPY --from=builder /root/publish .
 ENV ASPNETCORE_URLS=http://+:8080
 #ENV ASPNETCORE_ENVIRONMENT=Development
 EXPOSE 8080
