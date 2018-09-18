@@ -76,6 +76,11 @@
         [Route("/error/{code}")]
         public IActionResult Error(int code)
         {
+            if ((HttpStatusCode)Request.HttpContext.Response.StatusCode == HttpStatusCode.NotFound)
+            {
+                return RespondWithError(HttpStatusCode.NotFound, "Invalid API method.");
+            }
+
             return RespondWithError(HttpStatusCode.BadRequest, "An unexpected error occurred." );
         }
     }
