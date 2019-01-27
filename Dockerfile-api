@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2.1.402-sdk AS builder
+FROM microsoft/dotnet:2.2.103-sdk AS builder
 
 # Set the working directory
 WORKDIR /root
@@ -25,7 +25,7 @@ RUN dotnet publish ./WordFlip.WebApi/WordFlip.WebApi.csproj -c release -o ../pub
 
 
 
-FROM microsoft/dotnet:2.1.4-aspnetcore-runtime
+FROM microsoft/dotnet:2.2.1-aspnetcore-runtime
 
 WORKDIR /root
 COPY --from=builder /root/publish .
