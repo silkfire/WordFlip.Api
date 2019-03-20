@@ -7,9 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Grace" Version="6.4.2" />
+    <PackageReference Include="Grace.AspNetCore.Hosting" Version="6.4.0" />
+    <PackageReference Include="Grace.AspNetCore.MVC" Version="6.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="StructureMap" Version="4.7.0" />
-    <PackageReference Include="StructureMap.Microsoft.DependencyInjection" Version="1.4.0" />
   </ItemGroup>
 
   <ItemGroup>

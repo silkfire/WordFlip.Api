@@ -1,17 +1,22 @@
 ﻿namespace Wordsmith.WordFlip.WebApi
 {
-    using Microsoft.AspNetCore;
+    using Grace.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Hosting;
+
+    using System.IO;
 
 
     public class App
     {
         public static void Main()
         {
-            CreateWebHostBuilder().Build().Run();
+            new WebHostBuilder().UseGrace()
+                                .UseKestrel()
+                                .UseIISIntegration()
+                                .UseContentRoot(Directory.GetCurrentDirectory())
+                                .UseStartup<Startup>()
+                                .Build()
+                                .Run();
         }
-
-        public static IWebHostBuilder CreateWebHostBuilder() => WebHost.CreateDefaultBuilder()
-                                                                       .UseStartup<Startup>();
     }
 }
