@@ -1,6 +1,5 @@
 ﻿namespace Wordsmith.WordFlip.WebApi
 {
-    using System.Data;
     using Models;
 
     using Data.Entities;
@@ -14,6 +13,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
+    using System.Data;
     using System.Data.SqlClient;
 
 
@@ -32,7 +32,6 @@
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc()
-                    .AddControllersAsServices()
                     .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);         // Enables the new [ApiController] attribute
 
 
