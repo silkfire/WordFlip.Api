@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Grace" Version="6.4.2" />
-    <PackageReference Include="Grace.AspNetCore.Hosting" Version="6.4.0" />
-    <PackageReference Include="Grace.AspNetCore.MVC" Version="6.4.0" />
+    <PackageReference Include="Grace" Version="7.0.0" />
+    <PackageReference Include="Grace.AspNetCore.Hosting" Version="7.0.1" />
+    <PackageReference Include="Grace.AspNetCore.MVC" Version="7.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 

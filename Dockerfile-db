@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/mssql/server:2017-CU12-ubuntu
+FROM mcr.microsoft.com/mssql/server:2017-CU14-ubuntu
 
 ENV ACCEPT_EULA=Y
 
@@ -26,4 +26,4 @@ COPY setup-database.sh ./
 RUN chmod +x ./boot-database.sh
 RUN chmod +x ./setup-database.sh
 
-CMD bash ./boot-database.sh
+ENTRYPOINT bash ./boot-database.sh
