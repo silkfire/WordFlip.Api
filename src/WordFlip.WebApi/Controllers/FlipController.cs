@@ -1,6 +1,7 @@
 ﻿namespace Wordsmith.WordFlip.WebApi.Controllers
 {
     using Models;
+    using Utils;
 
     using Services.Core;
     using Services.Data.Models;
@@ -17,7 +18,7 @@
     [ApiController]
     public class FlipController : ControllerBase
     {
-        private readonly WordFlippingService   _flippingService;
+        private readonly WordFlippingService _flippingService;
         private readonly ApiSettings _settings;
 
 
@@ -26,13 +27,6 @@
         {
             _flippingService = flippingService;
             _settings        = settings.Value;
-        }
-
-
-
-        private IActionResult RespondWithError(HttpStatusCode statusCode, string message)
-        {
-            return StatusCode((int)statusCode, new ErrorResult { Error = message });
         }
 
 
@@ -52,36 +46,18 @@
 
             if (flippedSentenceRecord == null)
             {
-                return RespondWithError(HttpStatusCode.BadRequest, "'originalSentence' cannot be null or empty.");
+                return this.RespondWithJsonError(HttpStatusCode.BadRequest, "'originalSentence' cannot be null or empty.");
             }
 
 
             return new ObjectResult(flippedSentenceRecord);
         }
 
-
         // GET api/flip/getLastSentences
         [HttpGet("getLastSentences/{page?}")]
         public async Task<ActionResult<IEnumerable<FlippedSentenceDto>>> GetLastSentences(int page = 1)
         {
             return await _flippingService.GetLastSentences(_settings.ItemsPerPage, page);
-        }
-
-
-
-
-
-
-        // GET error/{code}
-        [Route("/error/{code}")]
-        public IActionResult Error(int code)
-        {
-            if ((HttpStatusCode)Request.HttpContext.Response.StatusCode == HttpStatusCode.NotFound)
-            {
-                return RespondWithError(HttpStatusCode.NotFound, "Invalid API method.");
-            }
-
-            return RespondWithError(HttpStatusCode.BadRequest, "An unexpected error occurred." );
         }
     }
 }

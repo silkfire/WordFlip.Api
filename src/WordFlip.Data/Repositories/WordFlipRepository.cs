@@ -1,4 +1,6 @@
-﻿namespace Wordsmith.WordFlip.Data.Repositories
+﻿using System.Data.Common;
+
+namespace Wordsmith.WordFlip.Data.Repositories
 {
     using Entities;
 
@@ -14,7 +16,7 @@
     /// </summary>
     public class WordFlipRepository : IWordFlipRepository<FlippedSentence>
     {
-        private readonly IDbConnection _connection;
+        private readonly DbConnection _connection;
         private IDbConnection Connection
         {
             get
@@ -32,8 +34,7 @@
         /// <summary>
         /// Initializes a new instance of a repository for reading and writing flipped sentences to a database.
         /// </summary>
-        /// <param name="connection"></param>
-        public WordFlipRepository(IDbConnection connection)
+        public WordFlipRepository(DbConnection connection)
         {
             _connection = connection;
         }
@@ -49,10 +50,10 @@
         {
             return await Connection.QueryAsync<FlippedSentence>(@"SELECT  *
 
-                                                                  FROM    ( SELECT ROW_NUMBER() OVER ( ORDER BY FS.created DESC, FS.id DESC ) AS RowNumber,
-                                                                                   FS.id, FS.sentence, FS.created
+                                                                  FROM    ( SELECT ROW_NUMBER() OVER ( ORDER BY FS.Created DESC, FS.Id DESC ) AS RowNumber,
+                                                                                   FS.Id, FS.Sentence, FS.Created
 
-                                                                            FROM   flipped_sentences AS FS
+                                                                            FROM   FlippedSentences AS FS
                                                                           ) AS RowConstrainedResult
                                                                   WHERE RowNumber >= @min
                                                                     AND RowNumber < @max
@@ -76,9 +77,9 @@
         /// <param name="sentence">The flipped sentence to persist.</param>
         public async Task<FlippedSentence> NewFlippedSentence(string sentence)
         {
-            return await Connection.QuerySingleAsync<FlippedSentence>(@"INSERT INTO flipped_sentences
+            return await Connection.QuerySingleAsync<FlippedSentence>(@"INSERT INTO FlippedSentences
 
-                                                                       (sentence)
+                                                                       (Sentence)
 
                                                                         OUTPUT INSERTED.*
 

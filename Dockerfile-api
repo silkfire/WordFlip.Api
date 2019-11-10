@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:2.2.301-alpine3.9 AS builder
+FROM mcr.microsoft.com/dotnet/core/sdk:3.0.0-buster-slim AS builder
 
 # Set the working directory
 WORKDIR /root
@@ -25,7 +25,7 @@ RUN dotnet publish ./WordFlip.WebApi/WordFlip.WebApi.csproj -c release -o ../pub
 
 
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:2.2.6-alpine3.9
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.0.0-buster-slim
 
 WORKDIR /root
 COPY --from=builder /root/publish .

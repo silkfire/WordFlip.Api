@@ -1,16 +1,18 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
-	<TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+	  <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
     <RootNamespace>Wordsmith.WordFlip.WebApi</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Grace" Version="7.0.0" />
+    <PackageReference Include="Grace" Version="7.1.0" />
     <PackageReference Include="Grace.AspNetCore.Hosting" Version="7.0.1" />
     <PackageReference Include="Grace.AspNetCore.MVC" Version="7.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Singularity" Version="0.14.1-aspnetcore30-0016" />
+    <PackageReference Include="Singularity.Microsoft.DependencyInjection" Version="0.14.1-aspnetcore30-0016" />
+    <PackageReference Include="SpanJson.AspNetCore.Formatter" Version="3.0.0" />
   </ItemGroup>
 
   <ItemGroup>

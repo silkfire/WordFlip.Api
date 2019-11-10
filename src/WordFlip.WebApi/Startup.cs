@@ -1,6 +1,7 @@
 ﻿namespace Wordsmith.WordFlip.WebApi
 {
     using Models;
+    using Utils;
 
     using Data.Entities;
     using Data.Repositories;
@@ -8,20 +9,30 @@
     using Grace.AspNetCore.MVC;
     using Grace.DependencyInjection;
     using Microsoft.AspNetCore.Builder;
-    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
+    using SpanJson.AspNetCore.Formatter;
+    using Singularity;
+    using Singularity.Microsoft.DependencyInjection;
 
-    using System.Data;
+    using System;
     using System.Data.SqlClient;
+    using System.Net;
+    using System.Threading.Tasks;
 
 
     public class Startup
     {
-        public Startup(IHostingEnvironment hostingEnvironment)
+        private readonly IHostEnvironment _hostingEnvironment;
+
+        public Startup(IHostEnvironment hostingEnvironment)
         {
-            Configuration = new ConfigurationBuilder().SetBasePath(hostingEnvironment.ContentRootPath)
+            _hostingEnvironment = hostingEnvironment;
+
+            Configuration = new ConfigurationBuilder().SetBasePath(_hostingEnvironment.ContentRootPath)
                                                       .AddJsonFile("appsettings.json")
                                                       .AddEnvironmentVariables()
                                                       .Build();
@@ -31,8 +42,10 @@
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc()
-                    .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);         // Enables the new [ApiController] attribute
+            services.AddControllers()
+                    //.AddControllersAsServices()
+                    .AddSpanJson()
+                    .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);         // Enables the new [ApiController] attribute
 
 
             // Set up a configuration object for the API
@@ -40,34 +53,75 @@
             services.Configure<ApiSettings>(Configuration.GetSection("ApiSettings"));
         }
 
+        //public void ConfigureContainer(ContainerBuilder builder)
+        //{
+        //    builder.Register<IWordFlipRepository<FlippedSentence>>(_ => _.Inject(() => new WordFlipRepository(new SqlConnection(Configuration.GetConnectionString("DefaultConnection")))).With(Lifetimes.PerContainer));
+        //}
+
+
         public void ConfigureContainer(IInjectionScope scope)
         {
             scope.SetupMvc();
 
             scope.Configure(c =>
             {
-                c.ExportFactory(() => new SqlConnection(Configuration.GetConnectionString("DefaultConnection"))).As<IDbConnection>().Lifestyle.Singleton();
-
-                c.ExportAs<WordFlipRepository, IWordFlipRepository<FlippedSentence>>().Lifestyle.Singleton();
+                c.ExportFactory(() => new WordFlipRepository(new SqlConnection(Configuration.GetConnectionString("DefaultConnection")))).As<IWordFlipRepository<FlippedSentence>>().Lifestyle.Singleton();
             });
         }
 
 
 
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
-            if (env.IsDevelopment())
+            app.UseRouting();
+
+            if (_hostingEnvironment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
             else
             {
-                app.UseStatusCodePagesWithReExecute("/error/{0}");
-                app.UseExceptionHandler("/error/500");
+                app.Use(async (ctx, next) =>
+                {
+                    try
+                    {
+                        await next();
+                    }
+                    catch (Exception e)
+                    {
+                        // TODO: Log error
+
+                        ctx.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
+
+                        await ctx.RespondWithJsonError("An unexpected error occurred.");
+                    }
+                });
             }
 
-            app.UseMvc();
+            app.Use(async (ctx, next) =>
+            {
+                var matchedEndpoint = ctx.GetEndpoint();
+
+                if (matchedEndpoint == null || matchedEndpoint.DisplayName == "405 HTTP Method Not Supported")
+                {
+                    ctx.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                    ctx.Response.OnStarting(() =>
+                    {
+                        ctx.Response.Headers.Remove("Allow");
+
+                        return Task.CompletedTask;
+                    });
+
+                    await ctx.RespondWithJsonError("Invalid API method.");
+                }
+                else
+                {
+                    await next();
+                }
+            });
+
+            app.UseEndpoints(erb => erb.MapControllers());
         }
     }
 }
