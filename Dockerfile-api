@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.0.0-buster-slim AS builder
+FROM mcr.microsoft.com/dotnet/core/sdk:3.0.101-buster AS builder
 
 # Set the working directory
 WORKDIR /root
@@ -17,20 +17,24 @@ RUN dotnet restore ./WordFlip.WebApi/WordFlip.WebApi.csproj
 # Copy the rest of the source files
 COPY ./src ./
 
+ARG APPSETTINGS=Docker
+
 # Rename the Docker-specific API settings file to its default name
-RUN mv ./WordFlip.WebApi/appsettings.Docker.json ./WordFlip.WebApi/appsettings.json
+RUN mv ./WordFlip.WebApi/appsettings.${APPSETTINGS}.json ./WordFlip.WebApi/appsettings.json
 
 # Build and deploy the application
-RUN dotnet publish ./WordFlip.WebApi/WordFlip.WebApi.csproj -c release -o ../publish
+RUN dotnet publish ./WordFlip.WebApi/WordFlip.WebApi.csproj -c Release -p:PublishDir=../publish
 
 
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.0.0-buster-slim
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.0.1-buster-slim
 
 WORKDIR /root
 COPY --from=builder /root/publish .
 ENV ASPNETCORE_URLS=http://+:8080
-#ENV ASPNETCORE_ENVIRONMENT=Development
+
+ARG ENV=Production
+ENV ASPNETCORE_ENVIRONMENT=${ENV}
 EXPOSE 8080
 
 # Start the web API service

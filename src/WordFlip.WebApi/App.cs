@@ -20,13 +20,18 @@
                                     .UseStartup<Startup>();
                              })
                              //.UseServiceProviderFactory(new SingularityServiceProviderFactory())
-                             //.ConfigureLogging((ctx, logging) =>
-                             //{
-                             //    if (ctx.HostingEnvironment.IsDevelopment())
-                             //    {
-                             //        logging.AddDebug();
-                             //    }
-                             //})
+                             .ConfigureLogging((ctx, logging) =>
+                             {
+                                 if (ctx.HostingEnvironment.IsDevelopment())
+                                 {
+                                     logging.AddDebug();
+                                 }
+
+                                 if (ctx.HostingEnvironment.IsProduction())
+                                 {
+                                     logging.AddConsole();
+                                 }
+                             })
                              .UseContentRoot(Directory.GetCurrentDirectory())
                              .Build()
                              .Run();
