@@ -2,9 +2,7 @@
 {
     using Models;
     using Utils;
-
-    using Services.Core;
-    using Services.Data.Models;
+    using Services.SentenceFlipping;
 
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;
@@ -18,46 +16,53 @@
     [ApiController]
     public class FlipController : ControllerBase
     {
-        private readonly WordFlippingService _flippingService;
-        private readonly ApiSettings _settings;
+        private readonly FlipSentenceService _flipSentenceService;
+        private readonly GetLastFlippedSentencesService _getLastFlippedSentencesService;
+
+        private readonly Configuration _configuration;
 
 
 
-        public FlipController(WordFlippingService flippingService, IOptions<ApiSettings> settings)
+        public FlipController(FlipSentenceService flipSentenceService, GetLastFlippedSentencesService getLastFlippedSentencesService, IOptions<Configuration> configuration)
         {
-            _flippingService = flippingService;
-            _settings        = settings.Value;
+            _flipSentenceService            = flipSentenceService;
+            _getLastFlippedSentencesService = getLastFlippedSentencesService;
+
+            _configuration                  = configuration.Value;
         }
 
 
 
         // POST api/flip
         [HttpPost]
-        public async Task<IActionResult> Flip(FlipPayload payload)
+        public async Task<IActionResult> Flip(FlipRequestDto request)
         {
-            FlippedSentenceDto flippedSentenceRecord = null;
+            FlippedSentenceDto flippedSentence = null;
 
 
-            if (payload != null)
+            if (request != null)
             {
-                flippedSentenceRecord = await _flippingService.Flip(payload.OriginalSentence);
+                flippedSentence = FlippedSentenceDto.Convert(await _flipSentenceService.Flip(request.OriginalSentence));
             }
 
 
-            if (flippedSentenceRecord == null)
+            if (flippedSentence == null)
             {
                 return this.RespondWithJsonError(HttpStatusCode.BadRequest, "'originalSentence' cannot be null or empty.");
             }
 
 
-            return new ObjectResult(flippedSentenceRecord);
+            return new ObjectResult(flippedSentence);
         }
 
         // GET api/flip/getLastSentences
         [HttpGet("getLastSentences/{page?}")]
-        public async Task<ActionResult<IEnumerable<FlippedSentenceDto>>> GetLastSentences(int page = 1)
+        public async IAsyncEnumerable<FlippedSentenceDto> GetLastSentences(int page = 1)
         {
-            return await _flippingService.GetLastSentences(_settings.ItemsPerPage, page);
+            await foreach (var flippedSentence in _getLastFlippedSentencesService.Get(_configuration.ItemsPerPage, page))
+            {
+                yield return FlippedSentenceDto.Convert(flippedSentence);
+            }
         }
     }
 }

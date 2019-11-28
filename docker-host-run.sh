@@ -1,1 +1,1 @@
-docker run -p 8080:8080 --name word-flip-api.hostdb silkfire/word-flip-api:hostdb-1.0
+docker run --rm -it -p 8080:8080 --name word-flip-api.hostdb silkfire/word-flip-api:hostdb-1.0

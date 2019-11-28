@@ -1,24 +1,24 @@
-﻿namespace Wordsmith.WordFlip.Data.Entities
+﻿namespace Wordsmith.WordFlip.Infrastructure.Entities
 {
     using System;
 
 
-    public class FlippedSentence
+    internal class FlippedSentenceEntity
     {
         /// <summary>
         /// The ID of the flipped sentence record.
         /// </summary>
-        public int id { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
         /// The flipped sentence.
         /// </summary>
-        public string sentence { get; set; }
+        public string Value { get; set; }
 
 
         /// <summary>
         /// Timestamp of when the flipped sentence was saved.
         /// </summary>
-        public DateTimeOffset created { get; set; }
+        public DateTimeOffset Created { get; set; }
     }
 }

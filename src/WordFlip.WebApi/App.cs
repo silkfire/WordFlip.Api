@@ -4,35 +4,27 @@
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
-    using Singularity.Microsoft.DependencyInjection;
 
-    using System.IO;
 
     public class App
     {
         public static void Main()
         {
             new HostBuilder().UseGrace()
-                             .ConfigureWebHostDefaults(whb =>
+                             .ConfigureWebHostDefaults(wb =>
                              {
-                                 whb.UseKestrel()
-                                    .UseIIS()
-                                    .UseStartup<Startup>();
+                                 wb.UseKestrel()
+                                   .UseIIS()
+                                   .UseStartup<Startup>();
                              })
-                             //.UseServiceProviderFactory(new SingularityServiceProviderFactory())
                              .ConfigureLogging((ctx, logging) =>
                              {
-                                 if (ctx.HostingEnvironment.IsDevelopment())
-                                 {
-                                     logging.AddDebug();
-                                 }
-
-                                 if (ctx.HostingEnvironment.IsProduction())
-                                 {
-                                     logging.AddConsole();
-                                 }
+#if DEBUG
+                                 logging.AddDebug();
+#else
+                                 logging.AddConsole();
+#endif
                              })
-                             .UseContentRoot(Directory.GetCurrentDirectory())
                              .Build()
                              .Run();
         }

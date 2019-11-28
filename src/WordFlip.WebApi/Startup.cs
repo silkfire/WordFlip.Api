@@ -1,10 +1,9 @@
 ﻿namespace Wordsmith.WordFlip.WebApi
 {
-    using Models;
     using Utils;
 
-    using Data.Entities;
-    using Data.Repositories;
+    using Domain.AggregatesModel.FlippedSentenceAggregate;
+    using Infrastructure.Repositories;
 
     using Grace.AspNetCore.MVC;
     using Grace.DependencyInjection;
@@ -14,9 +13,8 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.Logging;
     using SpanJson.AspNetCore.Formatter;
-    using Singularity;
-    using Singularity.Microsoft.DependencyInjection;
 
     using System;
     using System.Data.SqlClient;
@@ -28,6 +26,9 @@
     {
         private readonly IHostEnvironment _hostingEnvironment;
 
+        public IConfiguration Configuration { get; }
+
+
         public Startup(IHostEnvironment hostingEnvironment)
         {
             _hostingEnvironment = hostingEnvironment;
@@ -38,26 +39,18 @@
                                                       .Build();
         }
 
-        public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers()
-                    //.AddControllersAsServices()
                     .AddSpanJson()
                     .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);         // Enables the new [ApiController] attribute
 
 
             // Set up a configuration object for the API
 
-            services.Configure<ApiSettings>(Configuration.GetSection("ApiSettings"));
+            services.Configure<Configuration>(Configuration.GetSection(typeof(Configuration).Name));
         }
-
-        //public void ConfigureContainer(ContainerBuilder builder)
-        //{
-        //    builder.Register<IWordFlipRepository<FlippedSentence>>(_ => _.Inject(() => new WordFlipRepository(new SqlConnection(Configuration.GetConnectionString("DefaultConnection")))).With(Lifetimes.PerContainer));
-        //}
-
 
         public void ConfigureContainer(IInjectionScope scope)
         {
@@ -65,14 +58,14 @@
 
             scope.Configure(c =>
             {
-                c.ExportFactory(() => new WordFlipRepository(new SqlConnection(Configuration.GetConnectionString("DefaultConnection")))).As<IWordFlipRepository<FlippedSentence>>().Lifestyle.Singleton();
+                c.ExportFactory(() => new FlippedSentenceRepository(new SqlConnection(Configuration.GetConnectionString("DefaultConnection")))).As<IFlippedSentenceRepository>().Lifestyle.Singleton();
             });
         }
 
 
 
 
-        public void Configure(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
             app.UseRouting();
 
@@ -90,9 +83,9 @@
                     }
                     catch (Exception e)
                     {
-                        // TODO: Log error
+                        loggerFactory.CreateLogger("WordFlip.Api").LogError(e, "An unhandled exception occurred.");
 
-                        ctx.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
+                        ctx.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
                         await ctx.RespondWithJsonError("An unexpected error occurred.");
                     }

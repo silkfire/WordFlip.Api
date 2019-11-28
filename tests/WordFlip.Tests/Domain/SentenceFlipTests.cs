@@ -1,11 +1,11 @@
-namespace Wordsmith.WordFlip.Tests
+namespace Wordsmith.WordFlip.Tests.Domain
 {
+    using WordFlip.Domain.Models;
+
     using Xunit;
 
-    using Services.Core;
 
-
-    public class WordFlipTests
+    public class SentenceFlipTests
     {
         [Theory]
         [InlineData("The red fox crosses the ice, intent on none of my business.",
@@ -34,20 +34,21 @@ namespace Wordsmith.WordFlip.Tests
             // ARRANGE
             /////
 
+            var sentence = new Sentence(originalSentence);
 
 
             /////////////
             // ACT
             /////
 
-            var flippedSentence = WordFlip.Flip(originalSentence);
+            var flippedSentence = sentence.Flip();
 
 
             /////////////
             // ASSERT
             /////
 
-            Assert.Equal(expectedFlippedSentence, flippedSentence);
+            Assert.Equal(expectedFlippedSentence, flippedSentence.Value);
         }
     }
 }

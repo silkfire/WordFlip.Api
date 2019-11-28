@@ -24,7 +24,7 @@ BEGIN
 
 	CREATE TABLE [dbo].[FlippedSentences](
 		[Id] [int] IDENTITY(1,1) NOT NULL,
-		[Sentence] [text] NOT NULL,
+		[Value] [text] NOT NULL,
 		[Created] [datetimeoffset](7) NOT NULL,
 	 CONSTRAINT [PK_FlippedSentences] PRIMARY KEY CLUSTERED 
 	(

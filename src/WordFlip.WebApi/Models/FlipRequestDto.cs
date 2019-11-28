@@ -1,6 +1,6 @@
 ﻿namespace Wordsmith.WordFlip.WebApi.Models
 {
-    public class FlipPayload
+    public class FlipRequestDto
     {
         public string OriginalSentence { get; set; }
     }

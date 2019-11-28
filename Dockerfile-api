@@ -1,13 +1,14 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:3.0.101-buster AS builder
 
 # Set the working directory
-WORKDIR /root
+WORKDIR /build
 
 # Create directories for all project files
-RUN mkdir -p ./WordFlip.Data ./WordFlip.Services ./WordFlip.WebApi
+RUN mkdir -p ./WordFlip.Domain ./WordFlip.Infrastructure ./WordFlip.Services ./WordFlip.WebApi
 
 # Copy the the project files
-COPY ./src/WordFlip.Data/WordFlip.Data.csproj ./WordFlip.Data
+COPY ./src/WordFlip.Domain/WordFlip.Domain.csproj ./WordFlip.Domain
+COPY ./src/WordFlip.Infrastructure/WordFlip.Infrastructure.csproj ./WordFlip.Infrastructure
 COPY ./src/WordFlip.Services/WordFlip.Services.csproj ./WordFlip.Services
 COPY ./src/WordFlip.WebApi/WordFlip.WebApi.csproj ./WordFlip.WebApi
 
@@ -23,14 +24,15 @@ ARG APPSETTINGS=Docker
 RUN mv ./WordFlip.WebApi/appsettings.${APPSETTINGS}.json ./WordFlip.WebApi/appsettings.json
 
 # Build and deploy the application
-RUN dotnet publish ./WordFlip.WebApi/WordFlip.WebApi.csproj -c Release -p:PublishDir=../publish
+RUN dotnet publish ./WordFlip.WebApi/WordFlip.WebApi.csproj -c Release -p:PublishDir=publish
 
 
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.0.1-buster-slim
 
-WORKDIR /root
-COPY --from=builder /root/publish .
+WORKDIR /app
+COPY --from=builder /build/WordFlip.WebApi/publish .
+
 ENV ASPNETCORE_URLS=http://+:8080
 
 ARG ENV=Production
