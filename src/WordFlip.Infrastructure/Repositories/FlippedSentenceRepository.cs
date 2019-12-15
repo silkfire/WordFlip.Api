@@ -19,12 +19,14 @@
     /// </summary>
     public class FlippedSentenceRepository : IFlippedSentenceRepository
     {
+        private const int _commandTimeout = 2;
+
         private readonly DbConnection _connection;
         private async Task<IDbConnection> GetConnection()
         {
             if (_connection.State != ConnectionState.Closed) return _connection;
 
-            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(2));
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(1.5));
 
             try
             {
@@ -37,7 +39,6 @@
 
             return _connection;
         }
-
 
         /// <summary>
         /// Initializes a new instance of a repository for reading and writing flipped sentences to a database.
@@ -73,7 +74,10 @@
                                                                                                      {
                                                                                                          min = (page - 1) * itemsPerPage + 1,
                                                                                                          max = page * itemsPerPage + 1
-                                                                                                     }))
+                                                                                                     },
+                                                                                                     
+                                                                                                     
+                                                                                                     commandTimeout: _commandTimeout))
             {
                 yield return Convert(entity);
             }
@@ -97,7 +101,10 @@
                                                                                                    VALUES(@sentence)",
 
 
-                                                                                                   new { Sentence = flippedSentence.Value }));
+                                                                                                   new { Sentence = flippedSentence.Value },
+
+
+                                                                                                   commandTimeout: _commandTimeout));
         }
 
         private static FlippedSentence Convert(FlippedSentenceEntity entity) => new FlippedSentence(entity.Id, entity.Value, entity.Created);

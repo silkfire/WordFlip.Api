@@ -25,18 +25,12 @@
     public class Startup
     {
         private readonly IHostEnvironment _hostingEnvironment;
+        private readonly IConfiguration _configuration;
 
-        public IConfiguration Configuration { get; }
-
-
-        public Startup(IHostEnvironment hostingEnvironment)
+        public Startup(IHostEnvironment hostingEnvironment, IConfiguration configuration)
         {
             _hostingEnvironment = hostingEnvironment;
-
-            Configuration = new ConfigurationBuilder().SetBasePath(_hostingEnvironment.ContentRootPath)
-                                                      .AddJsonFile("appsettings.json")
-                                                      .AddEnvironmentVariables()
-                                                      .Build();
+            _configuration = configuration;
         }
 
 
@@ -49,16 +43,17 @@
 
             // Set up a configuration object for the API
 
-            services.Configure<Configuration>(Configuration.GetSection(typeof(Configuration).Name));
+            services.Configure<Configuration>(_configuration.GetSection(typeof(Configuration).Name));
         }
 
         public void ConfigureContainer(IInjectionScope scope)
         {
             scope.SetupMvc();
 
-            scope.Configure(c =>
+            scope.Configure(_ =>
             {
-                c.ExportFactory(() => new FlippedSentenceRepository(new SqlConnection(Configuration.GetConnectionString("DefaultConnection")))).As<IFlippedSentenceRepository>().Lifestyle.Singleton();
+                _.ExportFactory<IConfiguration, IFlippedSentenceRepository>(c => new FlippedSentenceRepository(new SqlConnection(c.GetConnectionString("DefaultConnection"))))
+                 .As<IFlippedSentenceRepository>().Lifestyle.Singleton();
             });
         }
 
@@ -67,6 +62,8 @@
 
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
+            var logger = loggerFactory.CreateLogger("WordFlip.Api");
+
             app.UseRouting();
 
             if (_hostingEnvironment.IsDevelopment())
@@ -83,7 +80,7 @@
                     }
                     catch (Exception e)
                     {
-                        loggerFactory.CreateLogger("WordFlip.Api").LogError(e, "An unhandled exception occurred.");
+                        logger.LogError(e, "An unhandled exception occurred.");
 
                         ctx.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 

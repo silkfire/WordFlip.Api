@@ -2,6 +2,7 @@
 {
     using Grace.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
 
@@ -16,6 +17,11 @@
                                  wb.UseKestrel()
                                    .UseIIS()
                                    .UseStartup<Startup>();
+                             })
+                             .ConfigureAppConfiguration(cb =>
+                             {
+                                 cb.AddJsonFile("appsettings.json")
+                                   .AddEnvironmentVariables();
                              })
                              .ConfigureLogging((ctx, logging) =>
                              {

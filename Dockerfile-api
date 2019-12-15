@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1.100-buster AS builder
 
 # Set the working directory
-WORKDIR /build
+WORKDIR /app
 
 # Create directories for all project files
 RUN mkdir -p ./WordFlip.Domain ./WordFlip.Infrastructure ./WordFlip.Services ./WordFlip.WebApi
@@ -31,7 +31,7 @@ RUN dotnet publish ./WordFlip.WebApi/WordFlip.WebApi.csproj -c Release -p:Publis
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.0-buster-slim
 
 WORKDIR /app
-COPY --from=builder /build/WordFlip.WebApi/publish .
+COPY --from=builder /app/WordFlip.WebApi/publish .
 
 ENV ASPNETCORE_URLS=http://+:8080
 
