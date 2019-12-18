@@ -1,5 +1,6 @@
 ﻿namespace Wordsmith.WordFlip.Domain.AggregatesModel.FlippedSentenceAggregate
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -7,7 +8,7 @@
     /// <summary>
     /// Defines methods to read and write flipped sentences from a data store.
     /// </summary>
-    public interface IFlippedSentenceRepository
+    public interface IFlippedSentenceRepository : IAsyncDisposable
     {
         /// <summary>
         /// Asynchronously fetches the last flipped sentences from the data store, sorted in descending order by its time of creation.

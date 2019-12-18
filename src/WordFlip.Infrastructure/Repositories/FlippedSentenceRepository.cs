@@ -108,5 +108,10 @@
         }
 
         private static FlippedSentence Convert(FlippedSentenceEntity entity) => new FlippedSentence(entity.Id, entity.Value, entity.Created);
+
+        public async ValueTask DisposeAsync()
+        {
+            if (_connection != null) await _connection.DisposeAsync();
+        }
     }
 }
