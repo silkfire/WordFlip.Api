@@ -53,7 +53,7 @@ The method returns an array of flipped sentence objects and follows the below JS
 [
    {  
       "id": 1,
-      "sentence": "deppilf eb ot ydaer ecnetnes a ma I.",
+      "value": "deppilf eb ot ydaer ecnetnes a ma I.",
       "created": "2018-07-01T14:55:00"
    }
 ]
