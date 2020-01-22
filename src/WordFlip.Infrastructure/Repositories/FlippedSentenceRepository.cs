@@ -17,7 +17,7 @@
     /// <summary>
     /// A repository for reading and writing flipped sentences to a database.
     /// </summary>
-    public class FlippedSentenceRepository : IFlippedSentenceRepository
+    public class FlippedSentenceRepository : IFlippedSentenceRepository, IAsyncDisposable
     {
         private const int _commandTimeout = 2;
 
@@ -27,7 +27,6 @@
             if (_connection.State != ConnectionState.Closed) return _connection;
 
             using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(1.5));
-
             try
             {
                 await _connection.OpenAsync(cts.Token);

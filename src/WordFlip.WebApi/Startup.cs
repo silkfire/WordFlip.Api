@@ -62,8 +62,6 @@
 
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
-            var logger = loggerFactory.CreateLogger("WordFlip.Api");
-
             app.UseRouting();
 
             if (_hostingEnvironment.IsDevelopment())
@@ -80,7 +78,7 @@
                     }
                     catch (Exception e)
                     {
-                        logger.LogError(e, "An unhandled exception occurred.");
+                        loggerFactory.CreateLogger("WordFlip.Api").LogError(e, "An unhandled exception occurred.");
 
                         ctx.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 

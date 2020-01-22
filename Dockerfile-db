@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/mssql/server:2017-CU17-ubuntu
+FROM mcr.microsoft.com/mssql/server:2019-latest
 
 ENV ACCEPT_EULA=Y
 
@@ -23,7 +23,8 @@ COPY boot-database.sh ./
 COPY setup-database.sh ./
 
 # Grant permissions for the setup scripts to be executable
-RUN chmod +x ./boot-database.sh
-RUN chmod +x ./setup-database.sh
+#USER root
+#RUN chmod +x ./boot-database.sh
+#RUN chmod +x ./setup-database.sh
 
 ENTRYPOINT bash ./boot-database.sh
