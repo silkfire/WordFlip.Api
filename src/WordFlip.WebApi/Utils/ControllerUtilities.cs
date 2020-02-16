@@ -18,7 +18,7 @@
 
         public static async Task RespondWithJsonError(this HttpContext context, string message)
         {
-            await new JsonResult(new ErrorResult(message)).ExecuteResultAsync(new ActionContext(context, context.GetRouteData(), new ActionDescriptor()));
+            await new ObjectResult(new ErrorResult(message)).ExecuteResultAsync(new ActionContext(context, context.GetRouteData(), new ActionDescriptor()));
         }
 
 

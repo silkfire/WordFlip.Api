@@ -10,6 +10,7 @@
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Data.SqlClient;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
@@ -17,7 +18,6 @@
     using SpanJson.AspNetCore.Formatter;
 
     using System;
-    using System.Data.SqlClient;
     using System.Net;
     using System.Threading.Tasks;
 
@@ -43,7 +43,7 @@
 
             // Set up a configuration object for the API
 
-            services.Configure<Configuration>(_configuration.GetSection(typeof(Configuration).Name));
+            services.Configure<Configuration>(_configuration.GetSection(nameof(Configuration)));
         }
 
         public void ConfigureContainer(IInjectionScope scope)

@@ -14,8 +14,7 @@
             new HostBuilder().UseGrace()
                              .ConfigureWebHostDefaults(wb =>
                              {
-                                 wb.UseKestrel()
-                                   .UseIIS()
+                                 wb.UseKestrel(kso => kso.AddServerHeader = false)
                                    .UseStartup<Startup>();
                              })
                              .ConfigureAppConfiguration(cb =>
@@ -25,11 +24,7 @@
                              })
                              .ConfigureLogging((ctx, logging) =>
                              {
-#if DEBUG
-                                 logging.AddDebug();
-#else
                                  logging.AddConsole();
-#endif
                              })
                              .Build()
                              .Run();
