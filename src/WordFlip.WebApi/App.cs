@@ -24,6 +24,8 @@
                              })
                              .ConfigureLogging((ctx, logging) =>
                              {
+                                 logging.AddConfiguration(ctx.Configuration.GetSection("Logging"));
+
                                  logging.AddConsole();
                              })
                              .Build()
