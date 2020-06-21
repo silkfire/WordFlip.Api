@@ -17,9 +17,10 @@
                                  wb.UseKestrel(kso => kso.AddServerHeader = false)
                                    .UseStartup<Startup>();
                              })
-                             .ConfigureAppConfiguration(cb =>
+                             .ConfigureAppConfiguration((ctx, cb) =>
                              {
-                                 cb.AddJsonFile("appsettings.json")
+                                 cb.AddJsonFile( "appsettings.json")
+                                   .AddJsonFile($"appsettings.{ctx.HostingEnvironment.EnvironmentName}.json", optional: true)
                                    .AddEnvironmentVariables();
                              })
                              .ConfigureLogging((ctx, logging) =>
