@@ -4,7 +4,7 @@
     "WordFlipApi": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/flip",
+      "launchUrl": "api/flip/getLastSentences",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

@@ -1,6 +1,7 @@
 *.suo
 *.DotSettings.user
 *.csproj.user
+*.pubxml.user
 _ReSharper.*
 .vs
 bin
