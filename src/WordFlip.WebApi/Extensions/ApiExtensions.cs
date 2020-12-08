@@ -1,4 +1,4 @@
-﻿namespace Wordsmith.WordFlip.WebApi.Utils
+﻿namespace Wordsmith.WordFlip.WebApi.Extensions
 {
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -9,7 +9,7 @@
     using System.Threading.Tasks;
 
 
-    public static class ControllerUtilities
+    public static class ApiExtensions
     {
         public static IActionResult RespondWithJsonError(this ControllerBase controller, HttpStatusCode statusCode, string message)
         {
@@ -22,14 +22,6 @@
         }
 
 
-        private class ErrorResult
-        {
-            public string Error { get; }
-
-            public ErrorResult(string error)
-            {
-                Error = error;
-            }
-        }
+        private record ErrorResult(string Error);
     }
 }

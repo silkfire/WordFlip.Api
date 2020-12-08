@@ -1,7 +1,8 @@
 ﻿namespace Wordsmith.WordFlip.WebApi.Controllers
 {
+    using Extensions;
     using Models;
-    using Utils;
+
     using Services.SentenceFlipping;
 
     using Microsoft.AspNetCore.Mvc;

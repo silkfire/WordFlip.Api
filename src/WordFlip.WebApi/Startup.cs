@@ -1,15 +1,13 @@
 ﻿namespace Wordsmith.WordFlip.WebApi
 {
-    using Utils;
-
     using Domain.AggregatesModel.FlippedSentenceAggregate;
+    using Extensions;
     using Infrastructure.Repositories;
 
     using Grace.AspNetCore.MVC;
     using Grace.DependencyInjection;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc;
     using Microsoft.Data.SqlClient;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -37,8 +35,7 @@
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers()
-                    .AddSpanJson()
-                    .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);         // Enables the new [ApiController] attribute
+                    .AddSpanJson();
 
 
             // Set up a configuration object for the API

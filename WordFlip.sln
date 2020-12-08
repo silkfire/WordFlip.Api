@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WordFlip.Services", "src\Wo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WordFlip.Tests", "tests\WordFlip.Tests\WordFlip.Tests.csproj", "{6C8F273A-30C8-4374-A50D-276856FE052D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WordFlip.Domain", "src\WordFlip.Domain\WordFlip.Domain.csproj", "{97A6D814-C4ED-4562-B804-EB4806241626}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WordFlip.Domain", "src\WordFlip.Domain\WordFlip.Domain.csproj", "{97A6D814-C4ED-4562-B804-EB4806241626}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
