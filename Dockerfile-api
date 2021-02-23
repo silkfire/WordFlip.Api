@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0.101-alpine3.12-amd64 AS builder
+FROM mcr.microsoft.com/dotnet/sdk:5.0.103-alpine3.13-amd64 AS builder
 
 # Set the working directory
 WORKDIR /app
@@ -23,12 +23,19 @@ ARG APPSETTINGS=Docker
 # Rename the Docker-specific API settings file to its default name
 RUN mv ./WordFlip.WebApi/appsettings.${APPSETTINGS}.json ./WordFlip.WebApi/appsettings.json
 
+# Remove app settings file not pertinent to when all services are run within a Docker container
+RUN rm ./WordFlip.WebApi/appsettings.DockerHost.json
+RUN rm ./WordFlip.WebApi/appsettings.Production.json
+
 # Build and deploy the application
 RUN dotnet publish ./WordFlip.WebApi/WordFlip.WebApi.csproj -c Release -p:PublishDir=publish
 
 
 
-FROM mcr.microsoft.com/dotnet/aspnet:5.0.1-alpine3.12-amd64
+FROM mcr.microsoft.com/dotnet/aspnet:5.0.3-alpine3.13-amd64
+
+RUN apk add icu-libs
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 
 WORKDIR /app
 COPY --from=builder /app/WordFlip.WebApi/publish .

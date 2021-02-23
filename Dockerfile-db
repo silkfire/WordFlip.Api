@@ -27,4 +27,4 @@ COPY setup-database.sh ./
 #RUN chmod +x ./boot-database.sh
 #RUN chmod +x ./setup-database.sh
 
-ENTRYPOINT bash ./boot-database.sh
+ENTRYPOINT ["bash", "./boot-database.sh"]

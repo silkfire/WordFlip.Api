@@ -50,7 +50,7 @@
             scope.Configure(_ =>
             {
                 _.ExportFactory<IConfiguration, IFlippedSentenceRepository>(c => new FlippedSentenceRepository(new SqlConnection(c.GetConnectionString("DefaultConnection"))))
-                 .As<IFlippedSentenceRepository>().Lifestyle.Singleton();
+                 .As<IFlippedSentenceRepository>().Lifestyle.SingletonPerRequest();
             });
         }
 
