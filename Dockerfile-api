@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0.103-alpine3.13-amd64 AS builder
+FROM mcr.microsoft.com/dotnet/sdk:5.0.202-alpine3.13-amd64 AS builder
 
 # Set the working directory
 WORKDIR /app
@@ -32,7 +32,7 @@ RUN dotnet publish ./WordFlip.WebApi/WordFlip.WebApi.csproj -c Release -p:Publis
 
 
 
-FROM mcr.microsoft.com/dotnet/aspnet:5.0.3-alpine3.13-amd64
+FROM mcr.microsoft.com/dotnet/aspnet:5.0.5-alpine3.13-amd64
 
 RUN apk add icu-libs
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
