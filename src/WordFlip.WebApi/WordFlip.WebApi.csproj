@@ -7,12 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Grace" Version="7.2.0" />
+    <PackageReference Include="Grace" Version="7.2.1" />
     <PackageReference Include="Grace.AspNetCore.Hosting" Version="7.1.0" />
     <PackageReference Include="Grace.AspNetCore.MVC" Version="7.1.0" />
     <!--<PackageReference Include="Grace.AspNetCore.Hosting" Version="7.0.1" />
     <PackageReference Include="Grace.AspNetCore.MVC" Version="7.0.1" />-->
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="2.1.2" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="3.0.0" />
     <PackageReference Include="SpanJson.AspNetCore.Formatter" Version="3.1.0" />
   </ItemGroup>
 

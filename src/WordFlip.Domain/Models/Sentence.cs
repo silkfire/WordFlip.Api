@@ -11,7 +11,7 @@
     {
         // [LEADING PUNCTUATION MARKS "']   [ANY CHARACTERS] (<--- only reverse this part)   [TRAILING PUNCTUATION MARKS .,:;!?…""']
 
-        private static readonly Regex _flipRegex = new Regex(@"^([""']+)?(.+?)([.,:;!?…""']+)?$");
+        private static readonly Regex _flipRegex = new(@"^([""']+)?(.+?)([.,:;!?…""']+)?$");
 
 
         public string Value { get; }

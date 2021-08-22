@@ -106,7 +106,7 @@
                                                                                                    commandTimeout: _commandTimeout));
         }
 
-        private static FlippedSentence Convert(FlippedSentenceEntity entity) => new FlippedSentence(entity.Id, entity.Value, entity.Created);
+        private static FlippedSentence Convert(FlippedSentenceEntity entity) => new(entity.Id, entity.Value, entity.Created);
 
         public async ValueTask DisposeAsync()
         {
