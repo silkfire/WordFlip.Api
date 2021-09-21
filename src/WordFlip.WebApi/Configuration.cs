@@ -6,7 +6,7 @@
     public class Configuration
     {
         /// <summary>
-        /// Specifies the number of items to return per page for the getLastSentences method.
+        /// Specifies the number of items to return per page for the <c>/getLastSentences</c> endpoint.
         /// </summary>
         public int ItemsPerPage { get; set; }
     }
