@@ -10,6 +10,7 @@
     using System.Collections.Generic;
     using System.Data;
     using System.Data.Common;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -54,32 +55,31 @@
         /// </summary>
         /// <param name="itemsPerPage">The number of items to return per page.</param>
         /// <param name="page">The page of results to return.</param>
-        public async IAsyncEnumerable<FlippedSentence> GetLast(int itemsPerPage, int page = 1)
+        public async Task<IReadOnlyList<FlippedSentence>> GetLast(int itemsPerPage, int page = 1)
         {
-            foreach (var entity in await (await GetConnection()).QueryAsync<FlippedSentenceEntity>(@"SELECT  *
+            return (await (await GetConnection()).QueryAsync<FlippedSentenceEntity>(@"SELECT  *
 
-                                                                                                     FROM    ( SELECT ROW_NUMBER() OVER ( ORDER BY FS.Created DESC, FS.Id DESC ) AS RowNumber,
-                                                                                                                      FS.Id, FS.Value, FS.Created
-                                                                                                     
-                                                                                                               FROM   FlippedSentences AS FS
-                                                                                                             ) AS RowConstrainedResult
-                                                                                                     WHERE RowNumber >= @min
-                                                                                                       AND RowNumber < @max
-                                                                                                     
-                                                                                                     ORDER BY RowNumber",
-
-
-                                                                                                     new
-                                                                                                     {
-                                                                                                         min = (page - 1) * itemsPerPage + 1,
-                                                                                                         max = page * itemsPerPage + 1
-                                                                                                     },
-                                                                                                     
-                                                                                                     
-                                                                                                     commandTimeout: _commandTimeout))
-            {
-                yield return Convert(entity);
-            }
+                                                                                      FROM    ( SELECT ROW_NUMBER() OVER ( ORDER BY FS.Created DESC, FS.Id DESC ) AS RowNumber,
+                                                                                                       FS.Id, FS.Value, FS.Created
+                                                                                      
+                                                                                                FROM   FlippedSentences AS FS
+                                                                                              ) AS RowConstrainedResult
+                                                                                      WHERE RowNumber >= @min
+                                                                                        AND RowNumber < @max
+                                                                                      
+                                                                                      ORDER BY RowNumber",
+                                                                                      
+                                                                                      
+                                                                                      new
+                                                                                      {
+                                                                                          min = (page - 1) * itemsPerPage + 1,
+                                                                                          max = page * itemsPerPage + 1
+                                                                                      },
+                                                                                      
+                                                                                      
+                                                                                      commandTimeout: _commandTimeout)).Select(Convert)
+                                                                                                                       .ToList()
+                                                                                                                       .AsReadOnly();
         }
 
 

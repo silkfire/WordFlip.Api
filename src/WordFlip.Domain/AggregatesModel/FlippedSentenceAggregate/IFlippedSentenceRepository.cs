@@ -14,7 +14,7 @@
         /// </summary>
         /// <param name="itemsPerPage">The number of items to return per page.</param>
         /// <param name="page">The page of results to return.</param>
-        IAsyncEnumerable<FlippedSentence> GetLast(int itemsPerPage, int page = 1);
+        Task<IReadOnlyList<FlippedSentence>> GetLast(int itemsPerPage, int page = 1);
 
         /// <summary>
         /// Asynchronously inserts the specified flipped sentence to the associated data store and returns the just saved record.

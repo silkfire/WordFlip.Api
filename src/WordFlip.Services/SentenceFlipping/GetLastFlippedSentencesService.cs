@@ -3,6 +3,7 @@
     using Domain.AggregatesModel.FlippedSentenceAggregate;
 
     using System.Collections.Generic;
+    using System.Threading.Tasks;
 
 
     public class GetLastFlippedSentencesService
@@ -20,7 +21,7 @@
         /// </summary>
         /// <param name="itemsPerPage">The number of items to return per page.</param>
         /// <param name="page">The page of results to return.</param>
-        public IAsyncEnumerable<FlippedSentence> Get(int itemsPerPage, int page = 1)
+        public Task<IReadOnlyList<FlippedSentence>> Get(int itemsPerPage, int page = 1)
         {
             return _flippedSentenceRepository.GetLast(itemsPerPage, page);
         }

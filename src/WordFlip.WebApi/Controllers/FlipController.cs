@@ -9,6 +9,7 @@
     using Microsoft.Extensions.Options;
 
     using System.Collections.Generic;
+    using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
 
@@ -58,12 +59,9 @@
 
         // GET api/flip/getLastSentences
         [HttpGet("getLastSentences/{page?}")]
-        public async IAsyncEnumerable<FlippedSentenceDto> GetLastSentences(int page = 1)
+        public async Task<ActionResult<IEnumerable<FlippedSentenceDto>>> GetLastSentences(int page = 1)
         {
-            await foreach (var flippedSentence in _getLastFlippedSentencesService.Get(_configuration.ItemsPerPage, page))
-            {
-                yield return FlippedSentenceDto.Convert(flippedSentence);
-            }
+            return Ok((await _getLastFlippedSentencesService.Get(_configuration.ItemsPerPage, page)).Select(FlippedSentenceDto.Convert));
         }
     }
 }
