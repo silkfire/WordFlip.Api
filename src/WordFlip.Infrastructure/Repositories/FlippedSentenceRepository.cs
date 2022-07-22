@@ -10,7 +10,6 @@
     using System;
     using System.Collections.Generic;
     using System.Data;
-    using System.Data.Common;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -21,8 +20,6 @@
     /// </summary>
     public class FlippedSentenceRepository : IFlippedSentenceRepository, IAsyncDisposable
     {
-        private const int CommandTimeout = 2;
-
         private readonly SqlConnection _connection;
         private async Task<IDbConnection> GetConnection()
         {
@@ -35,7 +32,7 @@
             }
             catch (TaskCanceledException)
             {
-                throw new TimeoutException($"Timed out while connecting to database {_connection.Database}. Make sure that the Microsoft SQL Server instance is up and running.");
+                throw new TimeoutException($"Timed out while attempting to connect to database {_connection.Database}. Ensure that the Microsoft SQL Server instance is up and running.");
             }
 
             return _connection;
@@ -75,12 +72,9 @@
                                                                                       {
                                                                                           min = (page - 1) * itemsPerPage + 1,
                                                                                           max = page * itemsPerPage + 1
-                                                                                      },
-                                                                                      
-                                                                                      
-                                                                                      commandTimeout: CommandTimeout)).Select(Convert)
-                                                                                                                       .ToList()
-                                                                                                                       .AsReadOnly();
+                                                                                      })).Select(Convert)
+                                                                                         .ToList()
+                                                                                         .AsReadOnly();
         }
 
 
@@ -101,10 +95,7 @@
                                                                                                    VALUES(@sentence)",
 
 
-                                                                                                   new { Sentence = flippedSentence.Value },
-
-
-                                                                                                   commandTimeout: CommandTimeout));
+                                                                                                   new { Sentence = flippedSentence.Value }));
         }
 
         private static FlippedSentence Convert(FlippedSentenceEntity entity) => new(entity.Id, entity.Value, entity.Created);

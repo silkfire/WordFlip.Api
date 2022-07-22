@@ -11,7 +11,7 @@
     <PackageReference Include="Grace.AspNetCore.Hosting" Version="7.1.0" />
     <PackageReference Include="Grace.AspNetCore.MVC" Version="7.1.0" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="4.1.0" />
-    <PackageReference Include="SpanJson.AspNetCore.Formatter" Version="3.2.0" />
+    <PackageReference Include="SpanJson.AspNetCore.Formatter" Version="3.2.2" />
   </ItemGroup>
 
   <ItemGroup>
