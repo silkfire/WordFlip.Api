@@ -8,6 +8,12 @@ namespace Wordsmith.WordFlip.Tests.Domain
     public class SentenceFlipTests
     {
         [Theory]
+        [InlineData("Hello",
+                    "olleH")]
+
+        [InlineData("Hello \n    World",
+                    "olleH dlroW")]
+
         [InlineData("The red fox crosses the ice, intent on none of my business.",
                     "ehT der xof sessorc eht eci, tnetni no enon fo ym ssenisub.")]
 
@@ -28,7 +34,7 @@ namespace Wordsmith.WordFlip.Tests.Domain
 
         [InlineData("Word1? word2: word3; 'word4'",
                     "1droW? 2drow: 3drow; '4drow'")]
-        public void Flipped_Sentence_Must_Equal_Expected_Flipped_Sentence(string originalSentence, string expectedFlippedSentence)
+        public void Should_produce_expected_flipped_sentence(string originalSentence, string expectedFlippedSentence)
         {
             /////////////
             // ARRANGE
