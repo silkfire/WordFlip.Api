@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
 	  <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
     <RootNamespace>Wordsmith.WordFlip.Services</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WordFlip.Infrastructure\WordFlip.Infrastructure.csproj" />
+    <ProjectReference Include="..\WordFlip.Domain\WordFlip.Domain.csproj" />
   </ItemGroup>
 
 </Project>
