@@ -10,8 +10,8 @@
     <PackageReference Include="Grace" Version="7.2.1" />
     <PackageReference Include="Grace.AspNetCore.Hosting" Version="7.1.0" />
     <PackageReference Include="Grace.AspNetCore.MVC" Version="7.1.0" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.0" />
-    <PackageReference Include="SpanJson.AspNetCore.Formatter" Version="4.0.0" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.1" />
+    <PackageReference Include="SpanJson.AspNetCore.Formatter" Version="4.0.1" />
   </ItemGroup>
 
   <ItemGroup>
