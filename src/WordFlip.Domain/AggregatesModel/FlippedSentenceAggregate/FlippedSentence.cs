@@ -2,7 +2,6 @@
 {
     using System;
 
-
     public class FlippedSentence
     {
         /// <summary>
@@ -15,12 +14,10 @@
         /// </summary>
         public string Value { get; }
 
-
         /// <summary>
         /// Timestamp of when the flipped sentence was saved.
         /// </summary>
         public DateTimeOffset Created { get; }
-
 
         public FlippedSentence(int id, string value, DateTimeOffset created)
         {
@@ -28,13 +25,11 @@
             Value = value;
             Created = created;
         }
-        
+
         public FlippedSentence(string value)
         {
             Value = value;
         }
-
-        
 
         public override string ToString() => Value;
     }

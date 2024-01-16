@@ -14,7 +14,6 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-
     /// <summary>
     /// A repository for reading and writing flipped sentences to a database.
     /// </summary>
@@ -46,8 +45,6 @@
             _connection = connection;
         }
 
-
-
         /// <summary>
         /// Asynchronously fetches the last flipped sentences from the database, sorted in descending order by its time of creation.
         /// </summary>
@@ -59,15 +56,15 @@
 
                                                                                       FROM    ( SELECT ROW_NUMBER() OVER ( ORDER BY FS.Created DESC, FS.Id DESC ) AS RowNumber,
                                                                                                        FS.Id, FS.Value, FS.Created
-                                                                                      
+
                                                                                                 FROM   FlippedSentences AS FS
                                                                                               ) AS RowConstrainedResult
                                                                                       WHERE RowNumber >= @min
                                                                                         AND RowNumber < @max
-                                                                                      
+
                                                                                       ORDER BY RowNumber",
-                                                                                      
-                                                                                      
+
+
                                                                                       new
                                                                                       {
                                                                                           min = (page - 1) * itemsPerPage + 1,
@@ -76,8 +73,6 @@
                                                                                          .ToList()
                                                                                          .AsReadOnly();
         }
-
-
 
         // Insert and select in one operation, solution taken from: https://stackoverflow.com/a/47110425/633098
         /// <summary>
@@ -89,9 +84,9 @@
             return Convert(await (await GetConnection()).QuerySingleAsync<FlippedSentenceEntity>(@"INSERT INTO FlippedSentences
 
                                                                                                   (Value)
-                                                                                                  
+
                                                                                                    OUTPUT INSERTED.*
-                                                                                                  
+
                                                                                                    VALUES(@sentence)",
 
 

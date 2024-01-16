@@ -3,7 +3,6 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-
     /// <summary>
     /// Defines methods to read and write flipped sentences from a data store.
     /// </summary>

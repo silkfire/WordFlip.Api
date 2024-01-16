@@ -13,7 +13,6 @@
     using System.Net;
     using System.Threading.Tasks;
 
-
     [Route("api/[controller]")]
     [ApiController]
     public class FlipController : ControllerBase
@@ -23,8 +22,6 @@
 
         private readonly Configuration _configuration;
 
-
-
         public FlipController(FlipSentenceService flipSentenceService, GetLastFlippedSentencesService getLastFlippedSentencesService, IOptions<Configuration> configuration)
         {
             _flipSentenceService            = flipSentenceService;
@@ -33,26 +30,21 @@
             _configuration                  = configuration.Value;
         }
 
-
-
         // POST api/flip
         [HttpPost]
         public async Task<IActionResult> Flip(FlipRequestDto request)
         {
             FlippedSentenceDto flippedSentence = null;
 
-
             if (request != null)
             {
                 flippedSentence = FlippedSentenceDto.Convert(await _flipSentenceService.Flip(request.OriginalSentence));
             }
 
-
             if (flippedSentence == null)
             {
                 return this.RespondWithJsonError(HttpStatusCode.BadRequest, "'originalSentence' cannot be null or empty.");
             }
-
 
             return new ObjectResult(flippedSentence);
         }

@@ -8,7 +8,6 @@
     using System.Net;
     using System.Threading.Tasks;
 
-
     public static class ApiExtensions
     {
         public static IActionResult RespondWithJsonError(this ControllerBase controller, HttpStatusCode statusCode, string message)
@@ -20,7 +19,6 @@
         {
             await new ObjectResult(new ErrorResult(message)).ExecuteResultAsync(new ActionContext(context, context.GetRouteData(), new ActionDescriptor()));
         }
-
 
         private record ErrorResult(string Error);
     }

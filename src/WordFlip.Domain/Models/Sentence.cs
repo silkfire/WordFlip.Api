@@ -6,7 +6,6 @@
     using System.Linq;
     using System.Text.RegularExpressions;
 
-
     public class Sentence
     {
         // [LEADING PUNCTUATION MARKS "']   [ANY CHARACTERS] (<--- only reverse this part)   [TRAILING PUNCTUATION MARKS .,:;!?…""']
@@ -14,7 +13,6 @@
         private static readonly Regex _flipRegex = new(@"^([""']+)?(.+?)([.,:;!?…""']+)?$", RegexOptions.Compiled);
 
         private static readonly Regex _consecutiveWhitespaceRegex = new(@"\s+", RegexOptions.Compiled);
-
 
         public string Value { get; }
 

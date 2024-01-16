@@ -4,8 +4,6 @@
     using Extensions;
     using Infrastructure.Repositories;
 
-    using Grace.AspNetCore.MVC;
-    using Grace.DependencyInjection;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Data.SqlClient;
@@ -13,12 +11,12 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
+    using Services.SentenceFlipping;
     using SpanJson.AspNetCore.Formatter;
 
     using System;
     using System.Net;
     using System.Threading.Tasks;
-
 
     public class Startup
     {
@@ -39,23 +37,12 @@
 
 
             // Set up a configuration object for the API
-
             services.Configure<Configuration>(_configuration.GetSection(nameof(Configuration)));
+
+            services.AddScoped<IFlippedSentenceRepository>(sp => new FlippedSentenceRepository(new SqlConnection(sp.GetRequiredService<IConfiguration>().GetConnectionString("DefaultConnection"))))
+                    .AddScoped<FlipSentenceService>()
+                    .AddScoped<GetLastFlippedSentencesService>();
         }
-
-        public void ConfigureContainer(IInjectionScope scope)
-        {
-            scope.SetupMvc();
-
-            scope.Configure(_ =>
-            {
-                _.ExportFactory<IConfiguration, IFlippedSentenceRepository>(c => new FlippedSentenceRepository(new SqlConnection(c.GetConnectionString("DefaultConnection"))))
-                 .As<IFlippedSentenceRepository>().Lifestyle.SingletonPerRequest();
-            });
-        }
-
-
-
 
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {

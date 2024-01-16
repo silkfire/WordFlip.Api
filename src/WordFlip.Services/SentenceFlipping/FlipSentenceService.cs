@@ -5,7 +5,6 @@
 
     using System.Threading.Tasks;
 
-
     public class FlipSentenceService
     {
         private readonly IFlippedSentenceRepository _flippedSentenceRepository;
@@ -14,7 +13,6 @@
         {
             _flippedSentenceRepository = flippedSentenceRepository;
         }
-
 
         /// <summary>
         /// Reverses each individual word of a sentence, preserving original word order as well as a predefined set of leading and trailing punctuation marks and persists the resulting sentences.

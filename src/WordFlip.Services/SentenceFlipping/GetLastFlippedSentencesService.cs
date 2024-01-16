@@ -5,7 +5,6 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-
     public class GetLastFlippedSentencesService
     {
         private readonly IFlippedSentenceRepository _flippedSentenceRepository;
@@ -14,7 +13,6 @@
         {
             _flippedSentenceRepository = flippedSentenceRepository;
         }
-
 
         /// <summary>
         /// Asynchronously fetches the last flipped sentences from the database, sorted in descending order by its time of creation.

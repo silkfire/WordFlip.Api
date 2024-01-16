@@ -4,7 +4,6 @@
 
     using System;
 
-
     public class FlippedSentenceDto
     {
         /// <summary>
@@ -17,13 +16,10 @@
         /// </summary>
         public string Value { get; set; }
 
-
         /// <summary>
         /// Timestamp of when the flipped sentence was saved.
         /// </summary>
         public DateTimeOffset Created { get; set; }
-
-
 
         public static FlippedSentenceDto Convert(FlippedSentence domainModel)
         {

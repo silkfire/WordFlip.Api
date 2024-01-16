@@ -2,7 +2,6 @@
 {
     using System;
 
-
     internal class FlippedSentenceEntity
     {
         /// <summary>
