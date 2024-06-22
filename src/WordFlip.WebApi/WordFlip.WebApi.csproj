@@ -5,10 +5,11 @@
 	  <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
     <RootNamespace>Wordsmith.WordFlip.WebApi</RootNamespace>
     <UserSecretsId>e4bfca6f-b5b1-4c83-ad4e-90207b559d7b</UserSecretsId>
+    <NoWarn>IDE0290</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SpanJson.AspNetCore.Formatter" Version="4.0.1" />
+    <PackageReference Include="SpanJson.AspNetCore.Formatter" Version="4.1.0" />
   </ItemGroup>
 
   <ItemGroup>

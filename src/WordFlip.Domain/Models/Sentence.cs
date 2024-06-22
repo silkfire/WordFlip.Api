@@ -6,13 +6,15 @@
     using System.Linq;
     using System.Text.RegularExpressions;
 
-    public class Sentence
+    public partial class Sentence
     {
         // [LEADING PUNCTUATION MARKS "']   [ANY CHARACTERS] (<--- only reverse this part)   [TRAILING PUNCTUATION MARKS .,:;!?…""']
 
-        private static readonly Regex _flipRegex = new(@"^([""']+)?(.+?)([.,:;!?…""']+)?$", RegexOptions.Compiled);
+        [GeneratedRegex("""^(["']+)?(.+?)([.,:;!?…"']+)?$""", RegexOptions.Compiled)]
+        private static partial Regex FlipRegex();
 
-        private static readonly Regex _consecutiveWhitespaceRegex = new(@"\s+", RegexOptions.Compiled);
+        [GeneratedRegex(@"\s+", RegexOptions.Compiled)]
+        private static partial Regex ConsecutiveWhitespaceRegex();
 
         public string Value { get; }
 
@@ -44,7 +46,7 @@
 
             // Merge any consecutive whitespace into one space character.
 
-            return string.Join(' ', _consecutiveWhitespaceRegex.Split(sentence.Trim().ToString()).Select(w => _flipRegex.Replace(w, m => $"{m.Groups[1].Value}{new string(m.Groups[2].Value.Reverse().ToArray())}{m.Groups[3].Value}")));
+            return string.Join(' ', ConsecutiveWhitespaceRegex().Split(sentence.Trim().ToString()).Select(w => FlipRegex().Replace(w, m => $"{m.Groups[1].Value}{new string(m.Groups[2].Value.Reverse().ToArray())}{m.Groups[3].Value}")));
         }
 
         public override string ToString() => Value;

@@ -5,6 +5,7 @@
     <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
     <RootNamespace>Wordsmith.WordFlip.Domain</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <NoWarn>IDE0290</NoWarn>
   </PropertyGroup>
 
 </Project>
