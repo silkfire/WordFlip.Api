@@ -1,16 +1,13 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0.203-alpine3.19-amd64 AS builder
+FROM mcr.microsoft.com/dotnet/sdk:8.0.303-alpine3.20-amd64 AS builder
 
 # Set the working directory
 WORKDIR /app
 
-# Create directories for all project files
-RUN mkdir -p ./WordFlip.Domain ./WordFlip.Infrastructure ./WordFlip.Services ./WordFlip.WebApi
-
 # Copy the the project files
-COPY ./src/WordFlip.Domain/WordFlip.Domain.csproj ./WordFlip.Domain
-COPY ./src/WordFlip.Infrastructure/WordFlip.Infrastructure.csproj ./WordFlip.Infrastructure
-COPY ./src/WordFlip.Services/WordFlip.Services.csproj ./WordFlip.Services
-COPY ./src/WordFlip.WebApi/WordFlip.WebApi.csproj ./WordFlip.WebApi
+COPY ./src/WordFlip.Domain/WordFlip.Domain.csproj ./WordFlip.Domain/
+COPY ./src/WordFlip.Infrastructure/WordFlip.Infrastructure.csproj ./WordFlip.Infrastructure/
+COPY ./src/WordFlip.Services/WordFlip.Services.csproj ./WordFlip.Services/
+COPY ./src/WordFlip.WebApi/WordFlip.WebApi.csproj ./WordFlip.WebApi/
 
 # Restore the dependencies of the project
 RUN dotnet restore ./WordFlip.WebApi/WordFlip.WebApi.csproj
@@ -28,19 +25,16 @@ RUN rm ./WordFlip.WebApi/appsettings.DockerHost.json
 RUN rm ./WordFlip.WebApi/appsettings.Production.json
 
 # Build and deploy the application
-RUN dotnet publish ./WordFlip.WebApi/WordFlip.WebApi.csproj -c Release -p:PublishDir=publish
+RUN dotnet publish ./WordFlip.WebApi/WordFlip.WebApi.csproj -c Release -p:PublishDir=publish --no-restore
 
 
-
-FROM mcr.microsoft.com/dotnet/aspnet:8.0.3-alpine3.19-amd64
+FROM mcr.microsoft.com/dotnet/aspnet:8.0.7-alpine3.20-amd64
 
 RUN apk add icu-libs
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 
 WORKDIR /app
 COPY --from=builder /app/WordFlip.WebApi/publish .
-
-ENV ASPNETCORE_URLS=http://+:8080
 
 ARG ENV=Production
 ENV ASPNETCORE_ENVIRONMENT=${ENV}

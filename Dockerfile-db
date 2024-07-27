@@ -1,11 +1,11 @@
-FROM mcr.microsoft.com/mssql/server:2022-CU12-ubuntu-22.04
+FROM mcr.microsoft.com/mssql/server:2022-CU14-ubuntu-22.04
 
 ENV ACCEPT_EULA=Y
 
 
 # In production, make sure to change to a secure password after running the container!
 # Don't forget to change the login details in ./setup-database.sh accordingly.
-# /opt/mssql-tools/bin/sqlcmd -U SA -P 'OLD_PASSWORD' -Q 'ALTER LOGIN SA WITH PASSWORD="NEW_PASSWORD"'
+# /opt/mssql-tools18/bin/sqlcmd -U SA -P 'OLD_PASSWORD' -Q 'ALTER LOGIN SA WITH PASSWORD="NEW_PASSWORD"'
 ENV MSSQL_SA_PASSWORD=January2018
 
 # In production, make sure to use a server that requires a license:
