@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
+    <TargetFramework>net9.0</TargetFramework>
     <RootNamespace>Wordsmith.WordFlip.Domain</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <NoWarn>IDE0290</NoWarn>
