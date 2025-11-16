@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <RootNamespace>Wordsmith.WordFlip.WebApi</RootNamespace>
     <UserSecretsId>e4bfca6f-b5b1-4c83-ad4e-90207b559d7b</UserSecretsId>
     <NoWarn>IDE0290</NoWarn>

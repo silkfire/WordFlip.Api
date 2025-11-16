@@ -41,8 +41,8 @@ namespace Wordsmith.WordFlip.Tests.Domain
                     ehT rettaH denepo sih seye yrev ediw no gniraeh siht; tub lla eh dias saw "yhW si a nevar ekil a gnitirw ksed?"
                     """)]
 
-        [InlineData("He was without hope... desolate, empty… the epitome of a broken heart.",
-                    "eH saw tuohtiw epoh... etalosed, ytpme… eht emotipe fo a nekorb traeh.")]
+        [InlineData("He was without hope... desolate, emptyâ€¦ the epitome of a broken heart.",
+                    "eH saw tuohtiw epoh... etalosed, ytpmeâ€¦ eht emotipe fo a nekorb traeh.")]
 
         [InlineData("Word1? word2: word3; 'word4'",
                     "1droW? 2drow: 3drow; '4drow'")]
