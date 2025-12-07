@@ -17,12 +17,15 @@
     /// <summary>
     /// A repository for reading and writing flipped sentences to a database.
     /// </summary>
-    public class FlippedSentenceRepository : IFlippedSentenceRepository, IAsyncDisposable
+    public sealed class FlippedSentenceRepository : IFlippedSentenceRepository, IAsyncDisposable
     {
         private readonly SqlConnection _connection;
         private async Task<IDbConnection> GetConnection()
         {
-            if (_connection.State != ConnectionState.Closed) return _connection;
+            if (_connection.State != ConnectionState.Closed)
+            {
+                return _connection;
+            }
 
             using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(1.5));
             try
@@ -52,17 +55,19 @@
         /// <param name="page">The page of results to return.</param>
         public async Task<IReadOnlyList<FlippedSentence>> GetLast(int itemsPerPage, int page = 1)
         {
-            return (await (await GetConnection()).QueryAsync<FlippedSentenceEntity>(@"SELECT  *
+            return (await (await GetConnection()).QueryAsync<FlippedSentenceEntity>("""
+                                                                                    SELECT  *
 
-                                                                                      FROM    ( SELECT ROW_NUMBER() OVER ( ORDER BY FS.Created DESC, FS.Id DESC ) AS RowNumber,
-                                                                                                       FS.Id, FS.Value, FS.Created
+                                                                                    FROM    ( SELECT ROW_NUMBER() OVER ( ORDER BY FS.Created DESC, FS.Id DESC ) AS RowNumber,
+                                                                                                     FS.Id, FS.Value, FS.Created
 
-                                                                                                FROM   FlippedSentences AS FS
-                                                                                              ) AS RowConstrainedResult
-                                                                                      WHERE RowNumber >= @min
-                                                                                        AND RowNumber < @max
+                                                                                              FROM   FlippedSentences AS FS
+                                                                                            ) AS RowConstrainedResult
+                                                                                    WHERE RowNumber >= @min
+                                                                                      AND RowNumber < @max
 
-                                                                                      ORDER BY RowNumber",
+                                                                                    ORDER BY RowNumber
+                                                                                    """,
 
 
                                                                                       new
@@ -81,23 +86,27 @@
         /// <param name="flippedSentence">The flipped sentence to persist.</param>
         public async Task<FlippedSentence> Add(FlippedSentence flippedSentence)
         {
-            return Convert(await (await GetConnection()).QuerySingleAsync<FlippedSentenceEntity>(@"INSERT INTO FlippedSentences
+            return Convert(await (await GetConnection()).QuerySingleAsync<FlippedSentenceEntity>("""
+                                                                                                 INSERT INTO FlippedSentences
 
-                                                                                                  (Value)
+                                                                                                 (Value)
 
-                                                                                                   OUTPUT INSERTED.*
+                                                                                                 OUTPUT INSERTED.*
 
-                                                                                                   VALUES(@sentence)",
+                                                                                                 VALUES(@sentence)
+                                                                                                 """,
 
-
-                                                                                                   new { Sentence = flippedSentence.Value }));
+                                                                                                 new { Sentence = flippedSentence.Value }));
         }
 
         private static FlippedSentence Convert(FlippedSentenceEntity entity) => new(entity.Id, entity.Value, entity.Created);
 
         public async ValueTask DisposeAsync()
         {
-            if (_connection != null) await _connection.DisposeAsync();
+            if (_connection != null)
+            {
+                await _connection.DisposeAsync();
+            }
         }
     }
 }

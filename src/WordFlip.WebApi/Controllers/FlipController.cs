@@ -13,7 +13,7 @@
     using System.Net;
     using System.Threading.Tasks;
 
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class FlipController : ControllerBase
     {

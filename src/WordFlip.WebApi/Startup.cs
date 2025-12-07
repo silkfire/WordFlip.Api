@@ -6,6 +6,7 @@
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Routing;
     using Microsoft.Data.SqlClient;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +16,8 @@
     using SpanJson.AspNetCore.Formatter;
 
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
 
@@ -35,6 +38,24 @@
             services.AddControllers()
                     .AddSpanJson();
 
+            if (_hostingEnvironment.IsDevelopment())
+            {
+                services.AddCors(o =>
+                {
+                    o.AddPolicy("Development", cpb =>
+                    {
+                        // TODO: Change to https when https://github.com/oven-sh/bun/issues/14825 is resolved
+
+                        cpb.WithOrigins("http://localhost:3000")
+                           .AllowAnyHeader()
+                           .WithMethods(HttpMethods.Get, HttpMethods.Post);
+                    });
+                });
+            }
+            else
+            {
+                
+            }
 
             // Set up a configuration object for the API
             services.Configure<Configuration>(_configuration.GetSection(nameof(Configuration)));
@@ -46,7 +67,18 @@
 
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
+            app.UsePathBase("/api");
+
             app.UseRouting();
+
+            if (_hostingEnvironment.IsDevelopment())
+            {
+                app.UseCors("Development");
+            }
+            else
+            {
+                
+            }
 
             if (_hostingEnvironment.IsDevelopment())
             {
@@ -73,6 +105,13 @@
 
             app.Use(async (ctx, next) =>
             {
+                if (HttpMethods.IsOptions(ctx.Request.Method))
+                {
+                    // Preflight requests should not be treated as invalid API methods.
+                    ctx.Response.StatusCode = StatusCodes.Status204NoContent;
+                    return;
+                }
+
                 var matchedEndpoint = ctx.GetEndpoint();
 
                 if (matchedEndpoint == null || matchedEndpoint.DisplayName == "405 HTTP Method Not Supported")
