@@ -1,59 +1,55 @@
-﻿namespace Wordsmith.WordFlip.WebApi.Controllers
+﻿namespace Wordsmith.WordFlip.WebApi.Controllers;
+
+using Extensions;
+using Models;
+
+using Domain;
+
+using Services.SentenceFlipping;
+
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+
+[Route("[controller]")]
+[ApiController]
+public class FlipController(FlipSentenceService flipSentenceService, IOptions<Configuration> configuration) : ControllerBase
 {
-    using Extensions;
-    using Models;
+    private readonly Configuration _configuration = configuration.Value;
 
-    using Services.SentenceFlipping;
-
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Options;
-
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.Threading.Tasks;
-
-    [Route("[controller]")]
-    [ApiController]
-    public class FlipController : ControllerBase
+    // POST api/flip
+    [HttpPost]
+    public async Task<IActionResult> Flip(FlipRequestDto request)
     {
-        private readonly FlipSentenceService _flipSentenceService;
-        private readonly GetLastFlippedSentencesService _getLastFlippedSentencesService;
+        FlippedSentenceDto flippedSentence = null;
 
-        private readonly Configuration _configuration;
-
-        public FlipController(FlipSentenceService flipSentenceService, GetLastFlippedSentencesService getLastFlippedSentencesService, IOptions<Configuration> configuration)
+        if (request != null)
         {
-            _flipSentenceService            = flipSentenceService;
-            _getLastFlippedSentencesService = getLastFlippedSentencesService;
-
-            _configuration                  = configuration.Value;
+            flippedSentence = FlippedSentenceDto.Convert(await flipSentenceService.Flip(request.OriginalSentence));
         }
 
-        // POST api/flip
-        [HttpPost]
-        public async Task<IActionResult> Flip(FlipRequestDto request)
+        if (flippedSentence == null)
         {
-            FlippedSentenceDto flippedSentence = null;
-
-            if (request != null)
-            {
-                flippedSentence = FlippedSentenceDto.Convert(await _flipSentenceService.Flip(request.OriginalSentence));
-            }
-
-            if (flippedSentence == null)
-            {
-                return this.RespondWithJsonError(HttpStatusCode.BadRequest, "'originalSentence' cannot be null or empty.");
-            }
-
-            return new ObjectResult(flippedSentence);
+            return this.RespondWithJsonError(HttpStatusCode.BadRequest, "'originalSentence' cannot be null or empty.");
         }
 
-        // GET api/flip/getLastSentences
-        [HttpGet("getLastSentences/{page?}")]
-        public async Task<ActionResult<IEnumerable<FlippedSentenceDto>>> GetLastSentences(int page = 1)
+        return new ObjectResult(flippedSentence);
+    }
+
+    // GET api/flip/getLastSentences
+    [HttpGet("getLastSentences/{page?}")]
+    public async Task<ActionResult<PaginatedResult<FlippedSentenceDto>>> GetLastSentences(int page = 1)
+    {
+        var result = await flipSentenceService.GetLastSentences(_configuration.ItemsPerPage, page);
+
+        return Ok(new PaginatedResult<FlippedSentenceDto>
         {
-            return Ok((await _getLastFlippedSentencesService.Get(_configuration.ItemsPerPage, page)).Select(FlippedSentenceDto.Convert));
-        }
+            TotalCount = result.TotalCount,
+            PageSize = result.PageSize,
+            Items = result.Items.Select(FlippedSentenceDto.Convert).ToList().AsReadOnly()
+        });
     }
 }

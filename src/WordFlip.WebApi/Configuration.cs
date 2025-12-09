@@ -1,13 +1,12 @@
-﻿namespace Wordsmith.WordFlip.WebApi
+﻿namespace Wordsmith.WordFlip.WebApi;
+
+/// <summary>
+/// A configuration class for the API service.
+/// </summary>
+public class Configuration
 {
     /// <summary>
-    /// A configuration class for the API service.
+    /// Specifies the number of items to return per page for the <c>/getLastSentences</c> endpoint.
     /// </summary>
-    public class Configuration
-    {
-        /// <summary>
-        /// Specifies the number of items to return per page for the <c>/getLastSentences</c> endpoint.
-        /// </summary>
-        public int ItemsPerPage { get; set; }
-    }
+    public int ItemsPerPage { get; set; }
 }

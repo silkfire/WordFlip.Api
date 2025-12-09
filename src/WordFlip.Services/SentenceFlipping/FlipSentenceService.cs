@@ -1,37 +1,47 @@
-﻿namespace Wordsmith.WordFlip.Services.SentenceFlipping
+﻿namespace Wordsmith.WordFlip.Services.SentenceFlipping;
+
+using Domain;
+using Domain.AggregatesModel.FlippedSentenceAggregate;
+using Domain.Models;
+
+using System.Threading.Tasks;
+
+public class FlipSentenceService
 {
-    using Domain.AggregatesModel.FlippedSentenceAggregate;
-    using Domain.Models;
+    private readonly IFlippedSentenceRepository _flippedSentenceRepository;
 
-    using System.Threading.Tasks;
-
-    public class FlipSentenceService
+    public FlipSentenceService(IFlippedSentenceRepository flippedSentenceRepository)
     {
-        private readonly IFlippedSentenceRepository _flippedSentenceRepository;
+        _flippedSentenceRepository = flippedSentenceRepository;
+    }
 
-        public FlipSentenceService(IFlippedSentenceRepository flippedSentenceRepository)
-        {
-            _flippedSentenceRepository = flippedSentenceRepository;
-        }
+    /// <summary>
+    /// Reverses each individual word of a sentence, preserving original word order as well as a predefined set of leading and trailing punctuation marks and persists the resulting sentences.
+    /// <para>The method returns the just inserted flipped sentence record.</para>
+    /// </summary>
+    /// <param name="sentence">A sentence whose individual words to reverse.</param>
+    public async Task<FlippedSentence> Flip(string sentence)
+    {
+        if (string.IsNullOrWhiteSpace(sentence)) return null;
 
-        /// <summary>
-        /// Reverses each individual word of a sentence, preserving original word order as well as a predefined set of leading and trailing punctuation marks and persists the resulting sentences.
-        /// <para>The method returns the just inserted flipped sentence record.</para>
-        /// </summary>
-        /// <param name="sentence">A sentence whose individual words to reverse.</param>
-        public async Task<FlippedSentence> Flip(string sentence)
-        {
-            if (string.IsNullOrWhiteSpace(sentence)) return null;
-
-            var sentenceToFlip = new Sentence(sentence);
-            var flippedSentence = sentenceToFlip.Flip();
+        var sentenceToFlip = new Sentence(sentence);
+        var flippedSentence = sentenceToFlip.Flip();
 
 
-            //////////////
-            // Save the flipped sentence to DB
-            ///////
+        //////////////
+        // Save the flipped sentence to DB
+        ///////
 
-            return await _flippedSentenceRepository.Add(flippedSentence);
-        }
+        return await _flippedSentenceRepository.Add(flippedSentence);
+    }
+
+    /// <summary>
+    /// Asynchronously fetches the last flipped sentences from the database, sorted in descending order by its time of creation.
+    /// </summary>
+    /// <param name="itemsPerPage">The number of items to return per page.</param>
+    /// <param name="page">The page of results to return.</param>
+    public Task<PaginatedResult<FlippedSentence>> GetLastSentences(int itemsPerPage, int page = 1)
+    {
+        return _flippedSentenceRepository.GetLast(itemsPerPage, page);
     }
 }

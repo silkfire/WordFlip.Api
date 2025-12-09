@@ -1,41 +1,34 @@
-﻿namespace Wordsmith.WordFlip.WebApi.Models
+﻿namespace Wordsmith.WordFlip.WebApi.Models;
+
+using Domain.AggregatesModel.FlippedSentenceAggregate;
+
+using System;
+
+public class FlippedSentenceDto
 {
-    using Domain.AggregatesModel.FlippedSentenceAggregate;
+    /// <summary>
+    /// The flipped sentence.
+    /// </summary>
+    public string Value { get; set; }
 
-    using System;
+    /// <summary>
+    /// Timestamp of when the flipped sentence was saved.
+    /// </summary>
+    public DateTimeOffset Created { get; set; }
 
-    public class FlippedSentenceDto
+    public static FlippedSentenceDto Convert(FlippedSentence domainModel)
     {
-        /// <summary>
-        /// The ID of the flipped sentence record.
-        /// </summary>
-        public int Id { get; set; }
-
-        /// <summary>
-        /// The flipped sentence.
-        /// </summary>
-        public string Value { get; set; }
-
-        /// <summary>
-        /// Timestamp of when the flipped sentence was saved.
-        /// </summary>
-        public DateTimeOffset Created { get; set; }
-
-        public static FlippedSentenceDto Convert(FlippedSentence domainModel)
+        if (domainModel == null)
         {
-            if (domainModel == null)
-            {
-                return null;
-            }
-
-            return new FlippedSentenceDto
-            {
-                Id = domainModel.Id,
-                Value = domainModel.Value,
-                Created = domainModel.Created
-            };
+            return null;
         }
 
-        public override string ToString() => Value;
+        return new FlippedSentenceDto
+               {
+                   Value = domainModel.Value,
+                   Created = domainModel.Created
+               };
     }
+
+    public override string ToString() => Value;
 }
