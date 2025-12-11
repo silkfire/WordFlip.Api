@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\WordFlip.Services\WordFlip.Services.csproj" />
+    <ProjectReference Include="..\..\src\WordFlip.WebApi\WordFlip.WebApi.csproj" />
   </ItemGroup>
 
 </Project>

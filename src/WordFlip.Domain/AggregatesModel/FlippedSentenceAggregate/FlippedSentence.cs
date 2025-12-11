@@ -17,9 +17,9 @@ public class FlippedSentence
     /// <summary>
     /// Timestamp of when the flipped sentence was saved.
     /// </summary>
-    public DateTimeOffset Created { get; }
+    public DateTime Created { get; }
 
-    public FlippedSentence(int id, string value, DateTimeOffset created)
+    public FlippedSentence(int id, string value, DateTime created)
     {
         Id = id;
         Value = value;

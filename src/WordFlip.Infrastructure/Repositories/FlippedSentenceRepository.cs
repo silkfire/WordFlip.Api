@@ -1,18 +1,16 @@
 ﻿namespace Wordsmith.WordFlip.Infrastructure.Repositories;
 
-using Entities;
-
+using Dapper;
 using Domain;
 using Domain.AggregatesModel.FlippedSentenceAggregate;
-
-using Dapper;
+using Entities;
 using Microsoft.Data.SqlClient;
-
 using System;
 using System.Data;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using static Dapper.SqlMapper;
 
 /// <summary>
 /// A repository for reading and writing flipped sentences to a database.
@@ -20,6 +18,7 @@ using System.Threading.Tasks;
 public sealed class FlippedSentenceRepository : IFlippedSentenceRepository, IAsyncDisposable
 {
     private readonly SqlConnection _connection;
+
     private async Task<IDbConnection> GetConnection()
     {
         if (_connection.State != ConnectionState.Closed)
@@ -48,12 +47,7 @@ public sealed class FlippedSentenceRepository : IFlippedSentenceRepository, IAsy
         _connection = connection;
     }
 
-    /// <summary>
-    /// Asynchronously fetches the last flipped sentences from the database, sorted in descending order by its time of creation.
-    /// </summary>
-    /// <param name="itemsPerPage">The number of items to return per page.</param>
-    /// <param name="page">The page of results to return.</param>
-    public async Task<PaginatedResult<FlippedSentence>> GetLast(int itemsPerPage, int page = 1)
+    public async Task<PaginatedResult<FlippedSentence>> GetLastSentences(int itemsPerPage, int page = 1, bool skipLast = false)
     {
         var connection = await GetConnection();
 
@@ -70,11 +64,11 @@ public sealed class FlippedSentenceRepository : IFlippedSentenceRepository, IAsy
                                                                         
                                                                         new
                                                                         {
-                                                                            offset = (page - 1) * itemsPerPage,
+                                                                            offset = (page - 1) * itemsPerPage + (skipLast ? 1 : 0),
                                                                             itemsPerPage
                                                                         })).Select(Convert)
-                                                                            .ToList()
-                                                                            .AsReadOnly();
+                                                                           .ToList()
+                                                                           .AsReadOnly();
 
         var totalCount = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM FlippedSentences");
 
@@ -86,30 +80,27 @@ public sealed class FlippedSentenceRepository : IFlippedSentenceRepository, IAsy
         };
     }
 
-    // Insert and select in one operation, solution taken from: https://stackoverflow.com/a/47110425/633098
-    /// <summary>
-    /// Asynchronously inserts the specified flipped sentence to the database and returns the just saved record.
-    /// </summary>
-    /// <param name="flippedSentence">The flipped sentence to persist.</param>
     public async Task<FlippedSentence> Add(FlippedSentence flippedSentence)
     {
-        return Convert(await (await GetConnection()).QuerySingleAsync<FlippedSentenceEntity>("""
-                                                                                             INSERT INTO FlippedSentences
+        var addedEntityProperties = await (await GetConnection()).QuerySingleAsync<(int Id, DateTime Created)>("""
+                                                                                                               INSERT INTO FlippedSentences
 
-                                                                                             (Value)
+                                                                                                               (Value)
 
-                                                                                             OUTPUT INSERTED.*
+                                                                                                               OUTPUT INSERTED.Id, INSERTED.Created
 
-                                                                                             VALUES(@sentence)
-                                                                                             """,
+                                                                                                               VALUES (@sentence)
+                                                                                                               """,
 
-                                                                                             new { Sentence = flippedSentence.Value }));
+                                                                                                               new { Sentence = flippedSentence.Value });
+        return new FlippedSentence(addedEntityProperties.Id, flippedSentence.Value, DateTime.SpecifyKind(addedEntityProperties.Created, DateTimeKind.Utc));
     }
 
-    private static FlippedSentence Convert(FlippedSentenceEntity entity) => new(entity.Id, entity.Value, entity.Created);
+    private static FlippedSentence Convert(FlippedSentenceEntity entity) => new(entity.Id, entity.Value, DateTime.SpecifyKind(entity.Created, DateTimeKind.Utc));
 
     public async ValueTask DisposeAsync()
     {
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
         if (_connection != null)
         {
             await _connection.DisposeAsync();

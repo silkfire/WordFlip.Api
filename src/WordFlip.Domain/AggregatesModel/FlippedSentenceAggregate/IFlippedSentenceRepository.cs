@@ -8,15 +8,16 @@ using System.Threading.Tasks;
 public interface IFlippedSentenceRepository
 {
     /// <summary>
-    /// Asynchronously fetches the last flipped sentences from the data store, sorted in descending order by its time of creation.
+    /// Gets the last flipped sentences from the data store, sorted in descending order by its time of creation.
     /// </summary>
     /// <param name="itemsPerPage">The number of items to return per page.</param>
     /// <param name="page">The page of results to return.</param>
-    Task<PaginatedResult<FlippedSentence>> GetLast(int itemsPerPage, int page = 1);
+    /// <param name="skipLast">Whether to skip the very last item. Set this to <see langword="true"/> to exclude the just flipped sentence.</param>
+    Task<PaginatedResult<FlippedSentence>> GetLastSentences(int itemsPerPage, int page = 1, bool skipLast = false);
 
     /// <summary>
-    /// Asynchronously inserts the specified flipped sentence to the associated data store and returns the just saved record.
+    /// Adds the specified flipped sentence to the underlying data store and returns the added entity.
     /// </summary>
-    /// <param name="flippedSentence">The flipped sentence to persist.</param>
+    /// <param name="flippedSentence">The flipped sentence to add to the underlying data store.</param>
     Task<FlippedSentence> Add(FlippedSentence flippedSentence);
 }

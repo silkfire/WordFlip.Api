@@ -2,5 +2,5 @@
 
 public class FlipRequestDto
 {
-    public string OriginalSentence { get; set; }
+    public required string OriginalSentence { get; init; }
 }

@@ -4,16 +4,18 @@
     <TargetFramework>net10.0</TargetFramework>
     <RootNamespace>Wordsmith.WordFlip.WebApi</RootNamespace>
     <UserSecretsId>e4bfca6f-b5b1-4c83-ad4e-90207b559d7b</UserSecretsId>
-    <NoWarn>IDE0290</NoWarn>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SpanJson.AspNetCore.Formatter" Version="4.2.1" />
+    <PackageReference Include="Serilog.Extensions.Hosting" Version="10.0.0" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="10.0.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
+    <PackageReference Include="Serilog.Sinks.Debug" Version="3.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\WordFlip.Infrastructure\WordFlip.Infrastructure.csproj" />
-    <ProjectReference Include="..\WordFlip.Services\WordFlip.Services.csproj" />
   </ItemGroup>
 
 </Project>

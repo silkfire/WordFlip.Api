@@ -6,7 +6,7 @@ using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-public partial class Sentence
+public partial class Sentence(string value)
 {
     // [LEADING PUNCTUATION MARKS "']   [ANY CHARACTERS] (<--- only reverse this part)   [TRAILING PUNCTUATION MARKS .,:;!?…""']
 
@@ -16,12 +16,7 @@ public partial class Sentence
     [GeneratedRegex(@"\s+", RegexOptions.Compiled)]
     private static partial Regex ConsecutiveWhitespaceRegex();
 
-    public string Value { get; }
-
-    public Sentence(string value)
-    {
-        Value = value;
-    }
+    public string Value { get; } = value;
 
     /// <summary>
     /// Reverses each individual word of the given sentence, preserving original word order as well as a predefined set of leading and trailing punctuation marks.
@@ -37,11 +32,6 @@ public partial class Sentence
     /// <param name="sentence">A sentence whose individual words to reverse.</param>
     private static string Flip(ReadOnlySpan<char> sentence)
     {
-        if (sentence.IsEmpty || sentence.IsWhiteSpace())
-        {
-            return null;
-        }
-
         sentence = sentence.Trim();
 
         // Merge any consecutive whitespace into one space character.

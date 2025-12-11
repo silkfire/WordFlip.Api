@@ -7,15 +7,15 @@ internal class FlippedSentenceEntity
     /// <summary>
     /// The ID of the flipped sentence record.
     /// </summary>
-    public int Id { get; set; }
+    public required int Id { get; init; }
 
     /// <summary>
     /// The flipped sentence.
     /// </summary>
-    public string Value { get; set; }
+    public required string Value { get; init; }
 
     /// <summary>
     /// Timestamp of when the flipped sentence was saved.
     /// </summary>
-    public DateTimeOffset Created { get; set; }
+    public required DateTime Created { get; init; }
 }
