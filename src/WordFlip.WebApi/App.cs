@@ -7,6 +7,7 @@ using Wordsmith.WordFlip.Domain.AggregatesModel.FlippedSentenceAggregate;
 
 using Wordsmith.WordFlip.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
@@ -34,21 +35,28 @@ try
 
     builder.WebHost.ConfigureKestrel(o => o.AddServerHeader = false);
 
+    string? corsOrigin;
+
     if (builder.Environment.IsDevelopment())
     {
-        builder.Services.AddCors(o =>
-        {
-            o.AddPolicy("Development", cpb =>
-            {
-                // TODO: Change to https when https://github.com/oven-sh/bun/issues/14825 is resolved
+        // TODO: Change to https when https://github.com/oven-sh/bun/issues/14825 is resolved
 
-                cpb.WithOrigins("http://localhost:3000")
-                   .AllowAnyHeader()
-                   .WithMethods(HttpMethods.Get, HttpMethods.Post);
-            });
-        });
-
+        corsOrigin = "http://localhost:3000";
     }
+    else
+    {
+        corsOrigin = builder.Configuration.GetRequiredSection("CorsOrigin").Value;
+    }
+
+    var defaultCorsPolicy = new CorsPolicyBuilder().WithOrigins(corsOrigin!)
+                                                   .AllowAnyHeader()
+                                                   .WithMethods(HttpMethods.Get, HttpMethods.Post)
+                                                   .Build();
+
+    builder.Services.AddCors(o =>
+                            {
+                                o.AddDefaultPolicy(defaultCorsPolicy);
+                            });
 
     builder.Services.AddSerilog((sp, lc) =>
     {
@@ -67,14 +75,7 @@ try
 
     app.UsePathBase("/api");
 
-    if (app.Environment.IsDevelopment())
-    {
-        app.UseCors("Development");
-    }
-    else
-    {
-        app.UseHttpsRedirection();
-    }
+    app.UseCors();
 
     if (app.Environment.IsDevelopment())
     {
@@ -105,8 +106,9 @@ try
     {
         if (HttpMethods.IsOptions(ctx.Request.Method))
         {
-            // Preflight requests should not be treated as invalid API methods.
+            // Preflight requests should not be treated as invalid API methods
             ctx.Response.StatusCode = StatusCodes.Status204NoContent;
+
             return;
         }
 
